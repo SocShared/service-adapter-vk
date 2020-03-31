@@ -11,21 +11,26 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:2.2.1.RELEASE'
-    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth:2.2.1.RELEASE'
-    implementation 'org.springframework.cloud:spring-cloud-starter-zipkin:2.2.1.RELEASE'
-    implementation 'org.keycloak:keycloak-spring-boot-starter:8.0.1'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'io.springfox:springfox-swagger2:2.9.2'
-    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
-    implementation 'com.h2database:h2'
-    implementation 'org.postgresql:postgresql'
-    implementation 'com.google.guava:guava:28.1-jre'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+    //API Description Generator
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+   // implementation  group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-ribbon', version: '2.2.2.RELEASE'
+    //RestControllers + tomcat
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.5.RELEASE'
+    //Logging
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: '2.2.5.RELEASE'
+    //OpenFeign for spring
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.2.RELEASE'
+    implementation group: 'com.netflix.feign', name: 'feign-gson', version: '8.18.0'
+    //Json serializer
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+    //JDBC driver for postgresql
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.11'
+    //Spring JPA - обертка над ORM
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.2.5.RELEASE'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 }
 
 bootJar {
@@ -34,5 +39,5 @@ bootJar {
 }
 
 springBoot {
-    mainClassName = 'ml.socshared.template.Application'
+    mainClassName = 'ml.socshared.adapter.vk.Main'
 }
