@@ -33,6 +33,8 @@ public class ApplicationService {
         if(userOptional.isEmpty()) {
             user = new SystemUser();
             user.setId(userId);
+        } else {
+            user = userOptional.get();
         }
         user.setGroupVkId(appVkId);
         user.setAccessToken(accessToken);

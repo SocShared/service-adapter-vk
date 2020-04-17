@@ -6,6 +6,7 @@ import ml.socshared.adapter.vk.domain.db.SystemUser;
 import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -31,7 +32,8 @@ public class VkAppController  implements VkAdapterAppApi {
     }
 
     @Override
-    @PostMapping("/users/{user}/app/{vk_app_id}")
+    @PostMapping(value = "/users/{user}/app/{vk_app_id}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void appRegister(@PathVariable(name = "user") UUID systemUserID,
                             @PathVariable(name = "vk_app_id") String vkAppID,
                             @RequestBody String accessToken) throws HttpNotFoundException {
