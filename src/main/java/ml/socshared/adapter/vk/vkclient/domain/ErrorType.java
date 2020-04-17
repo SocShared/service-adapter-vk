@@ -6,9 +6,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Error {
-    public Error() {}
-    public Error(ErrorCode error) {
+public class ErrorType {
+    public ErrorType() {}
+    public ErrorType(ErrorCode error) {
         errorCode = error;
     }
     @SerializedName("error_code")

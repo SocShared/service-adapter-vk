@@ -14,7 +14,7 @@ public class Post {
     private int fromId;
     @SerializedName("owner_id")
     private int ownerId;
-    private int date;
+    private long date;
     @SerializedName("marked_as_ads")
     private int markedAsAds;
     @SerializedName("post_type")

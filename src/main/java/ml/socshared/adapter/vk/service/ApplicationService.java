@@ -1,9 +1,8 @@
 package ml.socshared.adapter.vk.service;
 
 
-import javassist.NotFoundException;
 import ml.socshared.adapter.vk.domain.db.SystemUser;
-
+import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.repository.SystemUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,27 +23,32 @@ public class ApplicationService {
         return usersRepository.findByGroupVkId(groupId);
     }
 
-    public void setApp(UUID userId, String appVkId) {
+
+    //TODO Изменить поведения. В данный момент при отстутсвии пользователя он добавляется, /
+     // необходимо получать пользователя из KeyCloak и тогда при его отсутсвии в базе добавлять
+    //При отсутсвии пользователя в KeyCloak - возвращать ошибку 404
+    public void setApp(UUID userId, String appVkId, String accessToken) {
         Optional<SystemUser> userOptional = usersRepository.findById(userId);
         SystemUser user = null;
         if(userOptional.isEmpty()) {
             user = new SystemUser();
             user.setId(userId);
         }
-        user.setAccessToken(appVkId);
+        user.setGroupVkId(appVkId);
+        user.setAccessToken(accessToken);
         usersRepository.save(user);
     }
 
-    public void setGroupId(UUID userId, String groupVkId) throws NotFoundException {
+    public void setGroupId(UUID userId, String groupVkId) throws HttpNotFoundException {
         SystemUser su = getUser(userId);
         su.setGroupVkId(groupVkId);
         usersRepository.save(su);
     }
 
-    public SystemUser getUser(UUID userID) throws NotFoundException {
+    public SystemUser getUser(UUID userID) throws HttpNotFoundException {
         Optional<SystemUser> userOptions = usersRepository.findById(userID);
         if(userOptions.isEmpty()) {
-            throw new NotFoundException("user this uuid not found");
+            throw new HttpNotFoundException("User this uuid (+" + userID + "+) not found");
         }
         return userOptions.get();
     }
@@ -54,7 +58,7 @@ public class ApplicationService {
     }
 
 
-    public void setAccessToken(UUID userId, String accessTokenVk) throws NotFoundException {
+    public void setAccessToken(UUID userId, String accessTokenVk) throws HttpNotFoundException {
         SystemUser user = getUser(userId);
         user.setAccessToken(accessTokenVk);
         usersRepository.save(user);

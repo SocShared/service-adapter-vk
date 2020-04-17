@@ -1,4 +1,4 @@
-package ml.socshared.adapter.vk.vkclient.config;
+package ml.socshared.adapter.vk.vkclient.config.converter;
 
 import com.google.gson.*;
 import ml.socshared.adapter.vk.vkclient.domain.GroupType;

@@ -1,95 +1,136 @@
 package ml.socshared.adapter.vk.controller.v1;
 
-import javassist.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VKAdapterPostAPI;
-import ml.socshared.adapter.vk.domain.db.SystemUser;
+import ml.socshared.adapter.vk.domain.request.PostRequest;
 import ml.socshared.adapter.vk.domain.response.Page;
 import ml.socshared.adapter.vk.domain.response.PostResponse;
-import ml.socshared.adapter.vk.service.ApplicationService;
-import ml.socshared.adapter.vk.vkclient.VKClient;
-import ml.socshared.adapter.vk.vkclient.domain.Paginator;
-import ml.socshared.adapter.vk.vkclient.domain.Post;
+import ml.socshared.adapter.vk.exception.impl.HttpInternalServerErrorException;
+import ml.socshared.adapter.vk.service.VkPostService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 
 //TODO везде добавить проверку на существование access_token так, как он может быть пуст
 @RestController
+@RequestMapping("api/v1")
+@Slf4j
 public class PostController implements VKAdapterPostAPI {
-    @Override
-    public PostResponse getPostOfGroupById(UUID userId, String groupId, String postId) throws NotFoundException {
-        return null;
+
+    private VkPostService postService;
+
+    @Autowired
+    PostController(VkPostService ps) {
+        postService = ps;
     }
 
     @Override
-    @GetMapping("api/v1/users/{systemUserId}/groups/{groupId}/posts")
+    @GetMapping("/users/{systemUserId}/groups/{groupId}/posts/{postId}")
+    public PostResponse getPostOfGroupById(@PathVariable("systemUserId") UUID userId,
+                                           @PathVariable("groupId") String groupId,
+                                           @PathVariable("postId") String postId) {
+        log.info("Request of get post of group by id");
+        try {
+            return postService.getPostById(userId, groupId, postId);
+        } catch (VKClientException e) {
+            String msg = "VkClient error: " + e.getMessage();
+            log.warn(msg);
+            throw new HttpInternalServerErrorException(msg);
+        }
+    }
+
+    @Override
+    @GetMapping("/users/{systemUserId}/groups/{groupId}/posts")
     public Page<PostResponse> getPostsOfGroup(@PathVariable("systemUserId") UUID userId,
                                               @PathVariable("groupId") String groupId,
                                               @RequestParam(value = "page", required = false, defaultValue ="1") int page,
-                                              @RequestParam(value = "page", required = false, defaultValue ="10")int size)
-            throws NotFoundException, VKClientException {
-        logger.info("Request of get posts page");
-        SystemUser sUser = appService.getUser(userId);
-        VKClient client = new VKClient(sUser.getAccessToken());
-        int offset = (page-1)*size;
-        Paginator<Post> posts = client.getPostsOfGroup(groupId, "all", offset, size);
-        List<PostResponse> response = new LinkedList<>();
-        for(Post el : posts.getResponse()) {
-            response.add(convertPostToPostResponseDefault(el));
+                                              @RequestParam(value = "size", required = false, defaultValue ="10")int size) {
+        log.info("Request of get posts page");
+        try {
+            return postService.getPostsOfGroup(userId, groupId, page, size);
+        } catch (VKClientException e) {
+            String msg = "VkClient Error: " + e.getMessage();
+            log.warn(msg);
+            throw new HttpInternalServerErrorException(msg);
         }
-        Page<PostResponse> result = new Page<>();
-        result.setObject(response);
-        result.setHasNext(posts.getCount() > (offset + size));
-        result.setHasPrev(page > 1);
-        result.setPage(page);
-        result.setSize(size);
-        return result;
     }
 
     @Override
-    public PostResponse addPostInGroup(UUID userId, String groupId, String message) {
-        return null;
+    @PostMapping(value = "/users/{systemUserId}/groups/{groupId}/posts",
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public PostResponse addPostInGroup(@PathVariable UUID systemUserId,
+                                       @PathVariable String groupId,
+                                       @RequestBody PostRequest message) {
+        log.info("Request of create post");
+        try {
+            return postService.addPostToGroup(systemUserId, groupId, message.getMessage());
+        } catch (VKClientException e) {
+            String msg = "VkClient Error: " + e.getMessage();
+            log.warn(msg);
+            throw new HttpInternalServerErrorException(msg);
+        }
+    }
+
+
+    @Override
+    @PatchMapping(value = "/users/{userId}/groups/{groupId}/posts/{postId}",
+        consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public PostResponse updateAndGetPostInGroupById(@PathVariable UUID userId,
+                                                    @PathVariable String groupId,
+                                                    @PathVariable String postId,
+                                                    @RequestBody PostRequest message) {
+        log.info("Patch request: Update post in group");
+        try {
+            postService.updatePostOfGroup(userId, groupId, postId, message.getMessage());
+            return postService.getPostById(userId, groupId, postId);
+        } catch (VKClientException e) {
+           String msg = "VkClient Error: " + e.getMessage() + "(Code: " + e.getErrorType() + ")";
+           log.warn(msg);
+           throw new HttpInternalServerErrorException(msg);
+        }
     }
 
     @Override
-    public PostResponse updateAndGetPostInGroupById(UUID userId, String groupId, String message) {
-        return null;
+    @PutMapping(value = "/users/{userId}/groups/{groupId}/posts/{postId}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public void updatePostInGroupById(@PathVariable UUID userId,
+                                      @PathVariable String groupId,
+                                      @PathVariable String postId,
+                                      @RequestBody PostRequest message) {
+        log.info("Put request: Update post in group");
+        try {
+            postService.updatePostOfGroup(userId, groupId, postId, message.getMessage());
+        } catch (VKClientException e) {
+            String msg = "VkClient Error: " + e.getMessage() + "(Code: " + e.getErrorType() + ")";
+            log.warn(msg);
+            throw new HttpInternalServerErrorException(msg);
+        }
     }
 
     @Override
-    public void updatePostInGroupById(UUID userId, String groupId, String message) {
-
+    @DeleteMapping(value = "/users/{userId}/groups/{groupId}/posts/{postId}")
+    public Map<String, String> removePostInGroupById(@PathVariable UUID userId,
+                                                     @PathVariable String groupId,
+                                                     @PathVariable String postId) {
+        log.info("Request delete of group post");
+        try {
+         postService.deletePostOfGroup(userId, groupId, postId);
+         Map<String, String> response = new HashMap<>();
+         response.put("systemUserId", String.valueOf(userId));
+         response.put("groupId", groupId);
+         response.put("postId", postId);
+         return response;
+         
+        } catch (VKClientException e) {
+            String msg = "VkClien Error: " + e.getMessage() + "(Code: " + e.getErrorType() + ")";
+            log.warn(msg);
+            throw new HttpInternalServerErrorException(msg);
+        }
     }
-
-    @Override
-    public PostResponse removePostInGroupById(UUID userId, String groupId, String postId) {
-        return null;
-    }
-
-    public static PostResponse convertPostToPostResponseDefault(Post post) {
-        PostResponse p = new PostResponse();
-        p.setCreatedDate(new Date(post.getDate()*1000));
-        p.setUpdateDate(new Date(0));
-        p.setGroupId(String.valueOf(post.getOwnerId()));
-        p.setLikesCount(post.getLikes().getCount());
-        p.setRepostsCount(post.getReposts().getCount());
-        p.setMessage(post.getText());
-        p.setViewsCount(post.getViews().getCount());
-        return p;
-    }
-
-    private Logger logger = LoggerFactory.getLogger(PostController.class);
-    @Autowired
-    private ApplicationService appService;
 }

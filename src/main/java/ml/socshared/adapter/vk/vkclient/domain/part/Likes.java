@@ -11,5 +11,5 @@ public class Likes {
     @SerializedName("can_like")
     private int canLike;
     @SerializedName("can_publish")
-    private int canPublish;
+    private boolean canPublish;
 }

@@ -13,9 +13,9 @@ public class PostResponse {
     String postId;
     String message;
     String adapterId = "vk";
-    int likesCount;
-    int repostsCount;
-    int viewsCount;
-    Date createdDate;
+    int likesCount = 0;
+    int repostsCount = 0;
+    int viewsCount = 0;
+    Date createdDate = new Date();
     Date updateDate;
 }

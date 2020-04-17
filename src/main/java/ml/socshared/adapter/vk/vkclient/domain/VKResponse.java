@@ -4,26 +4,31 @@ public class VKResponse <ResponseType> {
 
     public VKResponse(ResponseType ok) {
         okValue = ok;
-        error = null;
+        errorType = null;
     }
 
-    public VKResponse(Error fail) {
+    public VKResponse(ErrorType fail) {
         okValue = null;
-        error = fail;
+        errorType = fail;
     }
+    public VKResponse() {}
 
+   public void setResponse(ResponseType response) {
+        okValue = response;
+    }
 
     public boolean isError() {
-        return error != null;
+        return errorType != null;
     }
+
 
     public ResponseType getResponse() {
         return okValue;
     }
-    public Error getError() {
-        return error;
+    public ErrorType getError() {
+        return errorType;
     }
 
-    private ResponseType okValue;
-    private Error error;
+    private ResponseType okValue = null;
+    private ErrorType errorType = null;
 }

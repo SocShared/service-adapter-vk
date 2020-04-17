@@ -1,7 +1,7 @@
 package ml.socshared.adapter.vk.vkclient.config;
 
 import com.google.gson.*;
-import ml.socshared.adapter.vk.vkclient.domain.Error;
+import ml.socshared.adapter.vk.vkclient.domain.ErrorType;
 import ml.socshared.adapter.vk.vkclient.domain.ErrorCode;
 import ml.socshared.adapter.vk.vkclient.domain.User;
 import ml.socshared.adapter.vk.vkclient.domain.VKResponse;
@@ -48,8 +48,8 @@ public class VKJsonResponseUsersListConverter implements JsonSerializer<VKRespon
             return new VKResponse<>(users);
         } else {
             //Возникла ошибка. Json является описанием ошибки
-            Error user_error = context.deserialize(error, Error.class);
-            return new VKResponse<>(user_error);
+            ErrorType user_errorType = context.deserialize(error, ErrorType.class);
+            return new VKResponse<>(user_errorType);
         }
     }
 

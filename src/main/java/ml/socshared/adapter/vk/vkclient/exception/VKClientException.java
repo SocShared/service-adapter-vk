@@ -1,20 +1,21 @@
 package ml.socshared.adapter.vk.vkclient.exception;
 
-import ml.socshared.adapter.vk.vkclient.domain.Error;
+import ml.socshared.adapter.vk.vkclient.domain.ErrorType;
 
 public class VKClientException extends Exception {
-    public VKClientException(String msg, Error error) {
+    public VKClientException(String msg, ErrorType errorType) {
         super(msg);
-        this.error = error;
+        this.errorType = errorType;
     }
-    public VKClientException(Error error) {
+    public VKClientException(ErrorType errorType) {
         super("vk is returned error object");
-        this.error = error;
+        this.errorType = errorType;
     }
 
-    public Error getError() {
-        return error;
+
+    public ErrorType getErrorType() {
+        return errorType;
     }
 
-    private Error error;
+    private ErrorType errorType;
 }

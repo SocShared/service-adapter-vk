@@ -8,6 +8,7 @@ import ml.socshared.adapter.vk.vkclient.domain.*;
 import org.springframework.cloud.openfeign.FeignClient;
 
 import java.util.List;
+import java.util.Map;
 
 @FeignClient(name="VKFeignClient",
              configuration= ClientConfiguration.class)
@@ -33,5 +34,41 @@ public interface VKFeignClient {
     VKResponse<Paginator<Post>> getPosts(@Param("owner_id") String ownerId, @Param("offset") int offset,
                                     @Param("count") int count, @Param("filter") String filter,
                                          @Param("token") String token);
+
+    @RequestLine("GET /wall.getById?posts={extendPostId}&access_token={token}&v=103.5")
+    VKResponse<List<Post>> getPost(@Param("extendPostId") String extendPostId,
+                                         @Param("token") String token);
+
+    @RequestLine("GET /wall.post?owner_id={groupId}&from_group=1&message={message}&close_comments=0&mute_notifications=0" +
+            "&access_token={token}&v=103.5")
+    VKResponse<Map<String, String>> sendPost(@Param("groupId")String groupId,@Param("message") String message,
+                                             @Param("token") String token);
+
+    @RequestLine("GET /wall.edit?owner_id={groupId}&post_id={post_id}&from_group=1&message={message}" +
+            "&close_comments=0&mute_notifications=0&access_token={token}&v=103.5")
+    VKResponse<Map<String, String>> editPost(@Param("groupId")String groupId, @Param("post_id") String postId,
+                                             @Param("message") String message, @Param("token") String token);
+
+
+    @RequestLine("GET /wall.delete?owner_id={groupId}&post_id={post_id}&access_token={token}&v=103.5")
+    VKResponse<String> deletePost(@Param("groupId")String groupId, @Param("post_id") String postId,
+                                  @Param("token") String token);
+
+    @RequestLine("GET /wall.getComment?owner_id={ownerId}&comment_id={commentId}&access_token={token}&v=103.5")
+    VKResponse<List<VkComment>> getCommentPostById(@Param("ownerId") String ownerId, @Param("commentId") String commentId,
+                                             @Param("token") String token);
+
+    @RequestLine("GET /wall.getComments?owner_id={ownerId}&post_id={postId}&need_likes=1&offset={offset}&count={count}" +
+            "&access_token={token}&v=103.5")
+    VKResponse<Paginator<VkComment>> getCommentsPost(@Param("ownerId") String ownerId, @Param("postId") String postId,
+                                                     @Param("offset") int offset, @Param("count") int count,
+                                                     @Param("token") String token);
+    @RequestLine("GET /wall.getComments?owner_id={ownerId}&post_id={postId}&comment_id={commentId}" +
+            "&need_likes=1&offset={offset}&count={count}&access_token={token}&v=103.5")
+    VKResponse<Paginator<VkSubComment>> getSubComments(@Param("ownerId") String ownerId, @Param("postId") String postId,
+                                                       @Param("commentId") String superCommentId,
+                                                       @Param("offset") int offset, @Param("count") int count,
+                                                       @Param("token") String token);
+    //comment_id
 
  }
