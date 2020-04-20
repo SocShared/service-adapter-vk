@@ -12,7 +12,7 @@ public class GroupResponse {
     String groupId;
     String name;
     String adapterID = "vk";
-    boolean isSelected;
+    boolean isSelected;//TODO добавление поля в GateWay - путем запроса к хранилищу
     int membersCount;
     GroupType type;
     Date createData;

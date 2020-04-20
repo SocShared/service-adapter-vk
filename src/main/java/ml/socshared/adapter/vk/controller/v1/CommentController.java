@@ -60,7 +60,7 @@ public class CommentController implements VkAdapterCommentApi {
         }
     }
 
-    @GetMapping("/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/subcomments")
+    @GetMapping("/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/sub_comments")
     @Override
     public Page<SubCommentResponse> getSubComments(@PathVariable UUID systemUserId,@PathVariable String vkGroupId,
                                                    @PathVariable String postId, @PathVariable String commentId,
@@ -76,7 +76,7 @@ public class CommentController implements VkAdapterCommentApi {
         }
     }
 
-    @GetMapping("/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/subcomments/{subCommentId}")
+    @GetMapping("/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/sub_comments/{subCommentId}")
     @Override
     public SubCommentResponse getSubComment(@PathVariable UUID systemUserId,@PathVariable String vkGroupId,
                                             @PathVariable String postId, @PathVariable String commentId,

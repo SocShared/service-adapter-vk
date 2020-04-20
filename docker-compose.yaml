@@ -1,7 +1,10 @@
 version: '3'
 services:
-  microservice-template:
-    container_name: socshared-microservice-template
-    image: vee97/socshared-microservice-template
+  vk_adapter:
+    build: .
     ports:
-      - 8080:8080
+      - "8080:8080"
+    environment:
+      POSTGRES_USER: springuser
+      POSTGRES_PASS: springpassword
+    network_mode: "host"

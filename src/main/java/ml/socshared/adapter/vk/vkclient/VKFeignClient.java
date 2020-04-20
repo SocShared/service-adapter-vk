@@ -25,7 +25,7 @@ public interface VKFeignClient {
                                                  @Param("token") String accessToken, @Param("offset") int offset,
                                                  @Param("count") int count);
 
-    @RequestLine("GET /groups.getById?group_id={group_id}&fields={fields}&access_token={token}&v=103.5")
+    @RequestLine("GET /groups.getById?group_ids={group_id}&fields={fields}&access_token={token}&v=103.5")
     VKResponse<List<VkGroup>> getGroupInfo(@Param("group_id") String groupID, @Param("fields") String fields,
                                      @Param("token") String token);
 

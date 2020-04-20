@@ -57,6 +57,8 @@ public class VkGroupServiceImpl implements VkGroupService {
             GroupResponse g = convertVkGroupToGroupResponseDefault(group);
             boolean isSelected = group.getId().equals(sUser.getGroupVkId());
             g.setSelected(isSelected);
+            g.setSystemUserId(systemUserId);
+            response.add(g);
         }
         Page<GroupResponse> responsePage = new Page<>();
         responsePage.setSize(response.size());

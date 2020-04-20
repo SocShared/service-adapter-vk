@@ -39,7 +39,7 @@ dependencies {
 }
 
 bootJar {
-    baseName = 'socshared-microservice-template'
+    baseName = 'socshared-vkAdapter'
     version = '1.0.0-SNAPSHOT'
 }
 

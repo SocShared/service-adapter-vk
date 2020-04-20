@@ -50,7 +50,7 @@ public class VKClient {
 
     public VkGroup getGroupInfo(String groupId, List<String> fields) throws VKClientException {
        StringBuilder fieldsList = convertListStringToString(fields);
-       VKResponse<List<VkGroup>> response = client.getGroupInfo("-"+groupId, fieldsList.toString(), token);
+       VKResponse<List<VkGroup>> response = client.getGroupInfo(groupId, fieldsList.toString(), token);
        if(response.isError() || response.getResponse().size() == 0) {
            throw new VKClientException(response.getError());
        } else {
