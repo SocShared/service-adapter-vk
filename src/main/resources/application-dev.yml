@@ -1,0 +1,19 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://vk_postgres_db:5433/vk
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASS}
+  jpa:
+    generate-ddl: true
+
+logging:
+  level:
+    ml:
+      socshared:
+        adapter:
+          vk:
+            vkclient:
+              VKClient: DEBUG
