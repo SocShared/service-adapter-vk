@@ -39,7 +39,7 @@ dependencies {
 }
 
 bootJar {
-    baseName = 'socshared-vkAdapter'
+    baseName = 'socshared-vk-adapter'
     version = '1.0.0-SNAPSHOT'
 }
 
