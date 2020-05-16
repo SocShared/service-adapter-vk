@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://socshared_vk_postgres_db:5433/vk
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}/${POSTGRES_DB:vk}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASS}
   jpa:

@@ -30,7 +30,13 @@ docker-push:
 docker-deploy-swarm:
   stage: docker-deploy-swarm
   script:
+    - touch .env_vk_pg
+    - echo "POSTGRES_USER=admin" >>  .env_vk_pg
+    - echo "POSTGRES_PASSWORD=admin" >>  .env_vk_pg
+    - echo "POSTGRES_DB=vk" >> .env_vk_pg
     - touch .env_vk
     - echo "POSTGRES_USER=admin" >> .env_vk
     - echo "POSTGRES_PASS=admin" >> .env_vk
+    - echo "POSTGRES_DB=vk" >> .env_vk
+    - echo "POSTGRES_HOST=vk_postgres_db:5433" >> .env_vk
     - sudo docker stack deploy -c docker-compose.yaml socshared
