@@ -7,7 +7,3 @@ services:
       - 8082:8082
     env_file:
       - .env_vk
-
-networks:
-  default:
-    name: socshared
