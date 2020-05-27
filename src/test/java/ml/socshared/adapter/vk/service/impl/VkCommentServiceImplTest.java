@@ -1,25 +1,8 @@
 package ml.socshared.adapter.vk.service.impl;
 
-import ml.socshared.adapter.vk.service.VkAuthorizationService;
-import ml.socshared.adapter.vk.vkclient.VKClient;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 class VkCommentServiceImplTest {
 
-<<<<<<< HEAD
-    VKClient client = Mockito.mock(VKClient.class);
-    VkAuthorizationService auth = Mockito.mock(VkAuthorizationService.class);
-    VkCommentServiceImpl service = new VkCommentServiceImpl(auth, client);
 
-
-
-
-    @Test
-    void getCommentsOfPost() {
-    }
-
-=======
 //    VKClient client = Mockito.mock(VKClient.class);
 //    VkAuthorizationService auth = Mockito.mock(VkAuthorizationService.class);
 //    VkCommentServiceImpl service = new VkCommentServiceImpl(auth, client);
@@ -31,7 +14,7 @@ class VkCommentServiceImplTest {
 //    void getCommentsOfPost() {
 //    }
 //
->>>>>>> gitlab/master
+
 //    @Test
 //    void getCommentOfPost() throws VKClientException {
 //        final String vkGroupId = "465465465";
@@ -46,11 +29,9 @@ class VkCommentServiceImplTest {
 //        comment.setId(vkCommentId);
 //        Likes likes = new Likes();
 //        likes.setCanLike(1);
-<<<<<<< HEAD
-//        likes.setCanPublish(true);
-=======
+
 //        likes.setCanPublish(1);
->>>>>>> gitlab/master
+
 //        likes.setCount(51);
 //        likes.setUserLikes(1);
 //        comment.setLikes(likes);
@@ -79,16 +60,7 @@ class VkCommentServiceImplTest {
 //
 //        Assertions.assertEquals(Integer.parseInt(result.getCommentId()), comment.getId());
 //    }
-<<<<<<< HEAD
 
-    @Test
-    void getCommentsOfSuperComment() {
-    }
-
-    @Test
-    void getCommentOfSuperComment() {
-    }
-=======
 //
 //    @Test
 //    void getCommentsOfSuperComment() {
@@ -97,5 +69,5 @@ class VkCommentServiceImplTest {
 //    @Test
 //    void getCommentOfSuperComment() {
 //    }
->>>>>>> gitlab/master
+
 }
