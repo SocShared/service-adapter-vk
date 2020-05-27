@@ -27,6 +27,14 @@ public class VKClient {
        this.token = token;
     }
 
+    public User getCurrentUserInfo() throws VKClientException {
+       VKResponse<List<User>> res =  client.getCurrentUserInfo(token);
+       if(res.isError()) {
+           throw new VKClientException(res.getError());
+       }
+       return res.getResponse().get(0);
+    }
+
     public List<User> getUsersInfo(List<Integer> ids) throws VKClientException {
         StringBuilder idsParam = new StringBuilder();
         if(ids.size() == 0) {

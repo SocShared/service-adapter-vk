@@ -44,7 +44,9 @@ public class VkPostServiceImpl implements VkPostService {
         Paginator<Post> posts = client.getPostsOfGroup(vkGroupId, "all", offset, size);
         List<PostResponse> response = new LinkedList<>();
         for(Post el : posts.getResponse()) {
-            response.add(convertPostToPostResponseDefault(el));
+            PostResponse resp = convertPostToPostResponseDefault(el);
+            response.add(resp);
+
         }
         Page<PostResponse> result = new Page<>();
         result.setObject(response);
@@ -112,6 +114,9 @@ public class VkPostServiceImpl implements VkPostService {
         p.setLikesCount(post.getLikes().getCount());
         p.setRepostsCount(post.getReposts().getCount());
         p.setMessage(post.getText());
+        p.setPostId(String.valueOf(post.getId()));
+        p.setUserId(String.valueOf(post.getFromId()));
+        p.setCommentsCount(post.getComments().getCount());
         if (post.getViews() != null)
             p.setViewsCount(post.getViews().getCount());
         return p;

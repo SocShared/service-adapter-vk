@@ -3,7 +3,7 @@ package ml.socshared.adapter.vk.vkclient.domain;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import ml.socshared.adapter.vk.vkclient.domain.part.CommentThread;
-import ml.socshared.adapter.vk.vkclient.domain.part.Likes;
+import ml.socshared.adapter.vk.vkclient.domain.part.LikesOfComment;
 
 import java.util.List;
 
@@ -20,6 +20,6 @@ public class VkComment {
     private int canEdit;
     private long date;
     private String text;
-    private Likes likes;
+    private LikesOfComment likes;
     private CommentThread thread;
 }

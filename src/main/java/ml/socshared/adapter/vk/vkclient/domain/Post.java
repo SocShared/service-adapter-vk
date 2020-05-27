@@ -9,14 +9,14 @@ import ml.socshared.adapter.vk.vkclient.domain.part.Views;
 
 @Data
 public class Post {
-    private int id;
+    private Integer id;
     @SerializedName("from_id")
-    private int fromId;
+    private Integer fromId;
     @SerializedName("owner_id")
-    private int ownerId;
-    private long date;
+    private Integer ownerId;
+    private Long date;
     @SerializedName("marked_as_ads")
-    private int markedAsAds;
+    private Integer markedAsAds;
     @SerializedName("post_type")
     private String postType;
     private String text;

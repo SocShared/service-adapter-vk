@@ -4,6 +4,8 @@ package ml.socshared.adapter.vk.service;
 import ml.socshared.adapter.vk.domain.db.SystemUser;
 import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.repository.SystemUserRepository;
+import ml.socshared.adapter.vk.vkclient.VKClient;
+import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,10 @@ public class ApplicationService {
 
 
     @Autowired
-    public ApplicationService(SystemUserRepository sur) {
-        usersRepository = sur;
+    public ApplicationService(SystemUserRepository sur, VKClient client) {
+
+        this.usersRepository = sur;
+        this.client = client;
     }
 
     public SystemUser findUserByGroup(String groupId) {
@@ -27,7 +31,7 @@ public class ApplicationService {
     //TODO Изменить поведения. В данный момент при отстутсвии пользователя он добавляется, /
      // необходимо получать пользователя из KeyCloak и тогда при его отсутсвии в базе добавлять
     //При отсутсвии пользователя в KeyCloak - возвращать ошибку 404
-    public void setApp(UUID userId, String appVkId, String accessToken) {
+    public void setApp(UUID userId, String appVkId, String accessToken) throws VKClientException {
         Optional<SystemUser> userOptional = usersRepository.findById(userId);
         SystemUser user = null;
         if(userOptional.isEmpty()) {
@@ -36,6 +40,9 @@ public class ApplicationService {
         } else {
             user = userOptional.get();
         }
+        client.setToken(accessToken);
+       // User info = client.getCurrentUserInfo();
+       // user.setVkUserId(String.valueOf(info.getId()));
         user.setGroupVkId(appVkId);
         user.setAccessToken(accessToken);
         usersRepository.save(user);
@@ -66,4 +73,5 @@ public class ApplicationService {
         usersRepository.save(user);
     }
     private SystemUserRepository usersRepository;
+    private VKClient client;
 }

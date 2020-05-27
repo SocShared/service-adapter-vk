@@ -18,6 +18,9 @@ public interface VKFeignClient {
     VKResponse<List<User>> getUsersInfo(@Param(value ="ids") String ids,
                                         @Param(value ="token")String token);
 
+    @RequestLine("GET /users.get?access_token={token}&v=103.5")
+    VKResponse<List<User>> getCurrentUserInfo(@Param(value ="token")String token);
+
     @RequestLine("GET /groups.get?fields={fields}&extended={extended}" +
             "&filter={filter}&access_token={token}&offset={offset}&count={count}&v=105.3")
     VKResponse<Paginator<VkGroup>> getGroupsInfo( @Param("fields") String field,

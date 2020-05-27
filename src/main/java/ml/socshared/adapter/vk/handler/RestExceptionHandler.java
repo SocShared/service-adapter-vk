@@ -2,20 +2,22 @@ package ml.socshared.adapter.vk.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.exception.AbstractRestHandleableException;
-import ml.socshared.adapter.vk.exception.AswErrors;
+import ml.socshared.template.exception.SocsharedErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import ml.socshared.template.handler.RestApiError;
 
 @ControllerAdvice
 @Slf4j
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private ResponseEntity<RestApiError> buildErrorResponse(Exception exc, HttpStatus httpStatus,
-                                                            ServletWebRequest webRequest, AswErrors errorCode) {
+    private ResponseEntity<RestApiError> buildErrorResponse(Throwable exc, HttpStatus httpStatus,
+                                                                                          ServletWebRequest webRequest, SocsharedErrors errorCode) {
         return new ResponseEntity<>(new RestApiError(exc, httpStatus, webRequest, errorCode), httpStatus);
     }
 
@@ -25,10 +27,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildErrorResponse(exc, exc.getHttpStatus(), webRequest, exc.getErrorCode());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<RestApiError> handlePrintException(ServletWebRequest webRequest, Exception exc) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<RestApiError> handlePrintException(ServletWebRequest webRequest, Throwable exc) {
         log.error(exc.getMessage());
-        return buildErrorResponse(exc, HttpStatus.INTERNAL_SERVER_ERROR, webRequest, AswErrors.INTERNAL);
+        exc.printStackTrace();
+        return buildErrorResponse(exc, HttpStatus.INTERNAL_SERVER_ERROR, webRequest, SocsharedErrors.INTERNAL);
     }
 }
 
