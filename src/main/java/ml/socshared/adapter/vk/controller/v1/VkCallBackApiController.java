@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @RequestMapping("api/v1/")
-@Slf4j
 @RestController
+@Slf4j
 public class VkCallBackApiController implements VkCallBackApi {
 
 

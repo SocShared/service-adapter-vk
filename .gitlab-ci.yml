@@ -14,20 +14,26 @@ build:
   script: ./gradlew clean build
   artifacts:
     paths:
-      - build/libs/socshared-microservice-template-1.0.0-SNAPSHOT.jar
+      - build/libs/socshared-vk-adapter-1.0.0-SNAPSHOT.jar
 
 docker-build:
   stage: docker-build
   script:
-    - sudo docker build -t $CI_DOCKER_LOGIN/socshared-microservice-template .
+    - docker 2>/dev/null 1>&2 rmi `docker images -aq` || true
+    - docker build -t $CI_DOCKER_LOGIN/socshared-vk-adapter .
 
 docker-push:
   stage: docker-push
   script:
-    - sudo docker login -u "$CI_DOCKER_LOGIN" -p "$CI_DOCKER_PASSWORD"
-    - sudo docker push $CI_DOCKER_LOGIN/socshared-microservice-template
+    - docker login -u "$CI_DOCKER_LOGIN" -p "$CI_DOCKER_PASSWORD"
+    - docker push $CI_DOCKER_LOGIN/socshared-vk-adapter
 
 docker-deploy-swarm:
   stage: docker-deploy-swarm
   script:
-    - sudo docker stack deploy -c docker-compose.yaml socshared
+    - touch .env_vk
+    - echo "POSTGRES_USER=admin" >> .env_vk
+    - echo "POSTGRES_PASS=admin" >> .env_vk
+    - echo "POSTGRES_DB=vk" >> .env_vk
+    - echo "POSTGRES_HOST=vk_postgres_db" >> .env_vk
+    - docker stack deploy -c docker-compose.yaml socshared

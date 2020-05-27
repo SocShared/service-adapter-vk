@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 
 class VkCommentServiceImplTest {
 
+<<<<<<< HEAD
     VKClient client = Mockito.mock(VKClient.class);
     VkAuthorizationService auth = Mockito.mock(VkAuthorizationService.class);
     VkCommentServiceImpl service = new VkCommentServiceImpl(auth, client);
@@ -18,6 +19,19 @@ class VkCommentServiceImplTest {
     void getCommentsOfPost() {
     }
 
+=======
+//    VKClient client = Mockito.mock(VKClient.class);
+//    VkAuthorizationService auth = Mockito.mock(VkAuthorizationService.class);
+//    VkCommentServiceImpl service = new VkCommentServiceImpl(auth, client);
+//
+//
+//
+//
+//    @Test
+//    void getCommentsOfPost() {
+//    }
+//
+>>>>>>> gitlab/master
 //    @Test
 //    void getCommentOfPost() throws VKClientException {
 //        final String vkGroupId = "465465465";
@@ -32,7 +46,11 @@ class VkCommentServiceImplTest {
 //        comment.setId(vkCommentId);
 //        Likes likes = new Likes();
 //        likes.setCanLike(1);
+<<<<<<< HEAD
 //        likes.setCanPublish(true);
+=======
+//        likes.setCanPublish(1);
+>>>>>>> gitlab/master
 //        likes.setCount(51);
 //        likes.setUserLikes(1);
 //        comment.setLikes(likes);
@@ -61,6 +79,7 @@ class VkCommentServiceImplTest {
 //
 //        Assertions.assertEquals(Integer.parseInt(result.getCommentId()), comment.getId());
 //    }
+<<<<<<< HEAD
 
     @Test
     void getCommentsOfSuperComment() {
@@ -69,4 +88,14 @@ class VkCommentServiceImplTest {
     @Test
     void getCommentOfSuperComment() {
     }
+=======
+//
+//    @Test
+//    void getCommentsOfSuperComment() {
+//    }
+//
+//    @Test
+//    void getCommentOfSuperComment() {
+//    }
+>>>>>>> gitlab/master
 }

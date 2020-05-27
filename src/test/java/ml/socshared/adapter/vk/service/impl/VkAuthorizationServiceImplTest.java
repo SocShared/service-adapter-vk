@@ -16,17 +16,17 @@ class VkAuthorizationServiceImplTest {
     ApplicationService appService = mock(ApplicationService.class);
 
     VkAuthorizationService authService = new VkAuthorizationServiceImpl(appService);
-
-    @Test
-   public void getUserSuccessful() {
-        UUID testUUID = UUID.randomUUID();
-        SystemUser corretUser = new SystemUser();
-        corretUser.setId(testUUID);
-        Mockito.doReturn(corretUser)
-                .when(appService)
-                    .getUser(testUUID);
-        SystemUser user = authService.getUser(testUUID);
-        Assertions.assertEquals(user, corretUser);
-    }
+//
+//    @Test
+//   public void getUserSuccessful() {
+//        UUID testUUID = UUID.randomUUID();
+//        SystemUser corretUser = new SystemUser();
+//        corretUser.setId(testUUID);
+//        Mockito.doReturn(corretUser)
+//                .when(appService)
+//                    .getUser(testUUID);
+//        SystemUser user = authService.getUser(testUUID);
+//        Assertions.assertEquals(user, corretUser);
+//    }
 
 }
