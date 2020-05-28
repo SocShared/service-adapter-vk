@@ -36,4 +36,5 @@ docker-deploy-swarm:
     - echo "POSTGRES_PASS=admin" >> .env_vk
     - echo "POSTGRES_DB=vk" >> .env_vk
     - echo "POSTGRES_HOST=vk_postgres_db" >> .env_vk
+    - echo "SPRING_PROFILE=$SPRING_PROFILE" >> .env_vk
     - docker stack deploy -c docker-compose.yaml socshared
