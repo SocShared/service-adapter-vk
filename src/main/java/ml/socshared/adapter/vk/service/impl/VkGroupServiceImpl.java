@@ -10,6 +10,8 @@ import ml.socshared.adapter.vk.service.ApplicationService;
 import ml.socshared.adapter.vk.service.BaseFunctions;
 import ml.socshared.adapter.vk.service.VkAuthorizationService;
 import ml.socshared.adapter.vk.service.VkGroupService;
+import ml.socshared.adapter.vk.service.sentry.SentrySender;
+import ml.socshared.adapter.vk.service.sentry.SentryTag;
 import ml.socshared.adapter.vk.vkclient.VKClient;
 import ml.socshared.adapter.vk.vkclient.domain.ErrorType;
 import ml.socshared.adapter.vk.vkclient.domain.Paginator;
@@ -27,12 +29,15 @@ public class VkGroupServiceImpl implements VkGroupService {
     private VkAuthorizationService vkAuth;
     private ApplicationService appService;
     private VKClient client;
+    private SentrySender sentrySender;
 
     @Autowired
-    VkGroupServiceImpl(VkAuthorizationService auth, VKClient client, ApplicationService app) {
+    VkGroupServiceImpl(VkAuthorizationService auth, VKClient client, ApplicationService app,
+                       SentrySender sentry) {
         this.vkAuth = auth;
         this.client = client;
         this.appService = app;
+        this.sentrySender = sentry;
     }
 
 
@@ -51,7 +56,7 @@ public class VkGroupServiceImpl implements VkGroupService {
         SystemUser sUser = vkAuth.getUser(systemUserId);
         client.setToken(sUser.getAccessToken());
         Paginator<VkGroup> vkGroups =  client.getGroupsInfo(sUser.getVkUserId(),  Arrays.asList("members_count", "description"),
-                Collections.singletonList("admin"), (page-1)*size, size);
+                Collections.singletonList("admin"), page*size, size);
         List<GroupResponse> response = new LinkedList<>();
         for(VkGroup group : vkGroups.getResponse()) {
             GroupResponse g = convertVkGroupToGroupResponseDefault(group);
@@ -66,6 +71,13 @@ public class VkGroupServiceImpl implements VkGroupService {
         responsePage.setHasPrev(page>1);
         responsePage.setHasNext(page*size < vkGroups.getCount());
         responsePage.setObject(response);
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        sentrySender.sentryMessage("get user vk groups", additional,
+                Collections.singletonList(SentryTag.GetUserGroups));
+
+
         return responsePage;
     }
 
@@ -76,6 +88,14 @@ public class VkGroupServiceImpl implements VkGroupService {
         VkGroup group = client.getGroupInfo(vkGroupId, Collections.singletonList("members_count"));
         GroupResponse response = convertVkGroupToGroupResponseDefault(group);
         response.setSelected(response.getGroupId().equals(sUser.getGroupVkId()));
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        additional.put("group_id", systemUserId);
+        sentrySender.sentryMessage("get user's group info by id", additional,
+                Collections.singletonList(SentryTag.GetUserGroup));
+
+
         return response;
     }
 
@@ -122,6 +142,14 @@ public class VkGroupServiceImpl implements VkGroupService {
             g = convertVkGroupToGroupResponseDefault(group);
             g.setSelected(!is_turn_selected);
         }
+
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        additional.put("group_id", systemUserId);
+        additional.put("is_selecting", isSelected);
+        sentrySender.sentryMessage("select vk group", additional,
+                Collections.singletonList(SentryTag.SelectGroup));
 
         return g;
     }

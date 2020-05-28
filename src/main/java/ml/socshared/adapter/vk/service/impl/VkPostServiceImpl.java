@@ -7,6 +7,8 @@ import ml.socshared.adapter.vk.domain.response.PostResponse;
 import ml.socshared.adapter.vk.service.BaseFunctions;
 import ml.socshared.adapter.vk.service.VkAuthorizationService;
 import ml.socshared.adapter.vk.service.VkPostService;
+import ml.socshared.adapter.vk.service.sentry.SentrySender;
+import ml.socshared.adapter.vk.service.sentry.SentryTag;
 import ml.socshared.adapter.vk.vkclient.VKClient;
 import ml.socshared.adapter.vk.vkclient.domain.Paginator;
 import ml.socshared.adapter.vk.vkclient.domain.Post;
@@ -14,10 +16,7 @@ import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -25,11 +24,13 @@ public class VkPostServiceImpl implements VkPostService {
 
     VkAuthorizationService vkAuth;
     VKClient client;
+    SentrySender sentrySender;
 
     @Autowired
-    VkPostServiceImpl(VkAuthorizationService vkAuth, VKClient client) {
+    VkPostServiceImpl(VkAuthorizationService vkAuth, VKClient client, SentrySender sentry) {
         this.vkAuth = vkAuth;
         this.client = client;
+        this.sentrySender = sentry;
     }
 
 
@@ -54,6 +55,15 @@ public class VkPostServiceImpl implements VkPostService {
         result.setHasPrev(page > 1);
         result.setPage(page);
         result.setSize(size);
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        additional.put("group_id", vkGroupId);
+        additional.put("page", page);
+        additional.put("size", size);
+        sentrySender.sentryMessage("get posts of vk group", additional,
+                Collections.singletonList(SentryTag.GetPosts));
+
         return result;
     }
 
@@ -64,6 +74,14 @@ public class VkPostServiceImpl implements VkPostService {
         BaseFunctions.checkGroupConnectionToUser(vkGroupId, sUser, log);
 
         Post vkPost = client.getPostOfGroup(vkGroupId, vkPostId);
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        additional.put("group_id", vkGroupId);
+        additional.put("post_id", vkPostId);
+        sentrySender.sentryMessage("get one post of vk group", additional,
+                Collections.singletonList(SentryTag.GetPost));
+
         return convertPostToPostResponseDefault(vkPost);
     }
 
@@ -80,6 +98,14 @@ public class VkPostServiceImpl implements VkPostService {
         result.setMessage(message);
         result.setGroupId(vkGroupId);
         result.setSystemUserId(systemUserId);
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        additional.put("group_id", vkGroupId);
+        additional.put("message", message);
+        sentrySender.sentryMessage("add post to group", additional,
+                Collections.singletonList(SentryTag.AddPost));
+
         return result;
     }
 
@@ -89,6 +115,13 @@ public class VkPostServiceImpl implements VkPostService {
         client.setToken(sUser.getAccessToken());
 
         BaseFunctions.checkGroupConnectionToUser(vkGroupId, sUser, log);
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        additional.put("group_id", vkGroupId);
+        additional.put("message", message);
+        sentrySender.sentryMessage("update vk post", additional,
+                Collections.singletonList(SentryTag.UpdatePost));
 
        client.editPostToGroup(vkGroupId, vkPostId, message);
     }
@@ -100,6 +133,13 @@ public class VkPostServiceImpl implements VkPostService {
         client.setToken(sUser.getAccessToken());
 
         BaseFunctions.checkGroupConnectionToUser(vkGroupId, sUser, log);
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        additional.put("group_id", vkGroupId);
+        additional.put("post_id", vkGroupId);
+        sentrySender.sentryMessage("delete vk post", additional,
+                Collections.singletonList(SentryTag.DeletePost));
 
         client.deletePost(vkGroupId, vkPostId);
     }

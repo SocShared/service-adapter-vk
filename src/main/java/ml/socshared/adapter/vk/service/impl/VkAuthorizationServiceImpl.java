@@ -6,9 +6,14 @@ import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.exception.impl.VkAuthorizationException;
 import ml.socshared.adapter.vk.service.ApplicationService;
 import ml.socshared.adapter.vk.service.VkAuthorizationService;
+import ml.socshared.adapter.vk.service.sentry.SentrySender;
+import ml.socshared.adapter.vk.service.sentry.SentryTag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -17,10 +22,13 @@ public class VkAuthorizationServiceImpl implements VkAuthorizationService {
 
 
     private ApplicationService appService;
+    private SentrySender sentrySender;
 
     @Autowired
-    VkAuthorizationServiceImpl(ApplicationService aps) {
+    VkAuthorizationServiceImpl(ApplicationService aps, SentrySender sentry)
+    {
         appService = aps;
+        sentrySender = sentry;
     }
 
     @Override
@@ -31,6 +39,11 @@ public class VkAuthorizationServiceImpl implements VkAuthorizationService {
                 throw new VkAuthorizationException("User with uuid (" + systemUserId +
                         ") don't have a access token of vk app");
             }
+
+            Map<String, Object> additional = new HashMap<>();
+            sentrySender.sentryMessage("get user info", additional,
+                    Collections.singletonList(SentryTag.GetUserInfo));
+
             return sUser;
         } catch(HttpNotFoundException exp) {
             log.warn("user this uuid ("+ systemUserId +") not found");

@@ -10,6 +10,8 @@ import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.service.BaseFunctions;
 import ml.socshared.adapter.vk.service.VkAuthorizationService;
 import ml.socshared.adapter.vk.service.VkCommentService;
+import ml.socshared.adapter.vk.service.sentry.SentrySender;
+import ml.socshared.adapter.vk.service.sentry.SentryTag;
 import ml.socshared.adapter.vk.vkclient.VKClient;
 import ml.socshared.adapter.vk.vkclient.domain.Paginator;
 import ml.socshared.adapter.vk.vkclient.domain.VkComment;
@@ -18,10 +20,7 @@ import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -29,11 +28,13 @@ public class VkCommentServiceImpl implements VkCommentService {
 
     private VkAuthorizationService vkAuth;
     private VKClient client;
+    private SentrySender sentrySender;
 
     @Autowired
-    VkCommentServiceImpl(VkAuthorizationService auth, VKClient vkClient) {
+    VkCommentServiceImpl(VkAuthorizationService auth, VKClient vkClient, SentrySender sentry) {
         vkAuth = auth;
         client = vkClient;
+        sentrySender = sentry;
     }
 
 
@@ -41,7 +42,7 @@ public class VkCommentServiceImpl implements VkCommentService {
     public Page<CommentResponse> getCommentsOfPost(UUID systemUserId, String vkGroupId, String vkPostId,
                                                    int page, int size) throws VKClientException {
         getAndCheckUser(systemUserId, vkGroupId);
-        int offset = (page-1)*size;
+        int offset = page*size;
         Paginator<VkComment> comments = client.getCommentsOfPost(vkGroupId, vkPostId, offset, size);
         List<CommentResponse> comm = new LinkedList<>();
         for(VkComment comment : comments.getResponse()) {
@@ -55,6 +56,17 @@ public class VkCommentServiceImpl implements VkCommentService {
         response.setPage(page);
         response.setHasPrev(page > 1);
         response.setHasNext(comments.getCount() > page*comm.size());
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        additional.put("group_id", vkGroupId);
+        additional.put("post_id", vkPostId);
+        additional.put("page", page);
+        additional.put("size", size);
+        sentrySender.sentryMessage("get comments of vk post",
+                additional, Collections.singletonList(SentryTag.CommentsOfPost));
+
+
         return response;
     }
 
@@ -69,6 +81,15 @@ public class VkCommentServiceImpl implements VkCommentService {
         CommentResponse response = convertVkCommentToCommentResponseDefault(comment);
         response.setGroupId(vkGroupId);
         response.setSystemUserId(systemUserId);
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        additional.put("group_id", vkGroupId);
+        additional.put("post_id", vkPostId);
+        sentrySender.sentryMessage("get one comment of vk post",
+                additional, Collections.singletonList(SentryTag.CommentOfPost));
+
+
         return response;
     }
 
@@ -76,7 +97,7 @@ public class VkCommentServiceImpl implements VkCommentService {
     public Page<SubCommentResponse> getSubComments(UUID systemUserId, String vkGroupId, String vkPostId,
                                                    String vkSuperCommentId, int page, int size) throws VKClientException {
         SystemUser sUser = getAndCheckUser(systemUserId, vkGroupId);
-        int offset = (page-1)*size;
+        int offset = page*size;
         Paginator<VkSubComment> comments = client.getSubComments(vkGroupId, vkPostId, vkSuperCommentId, offset, size);
         List<SubCommentResponse> response = new LinkedList<>();
         for(VkSubComment c : comments.getResponse()) {
@@ -92,6 +113,15 @@ public class VkCommentServiceImpl implements VkCommentService {
         responsePage.setHasPrev(page > 1);
         responsePage.setHasNext(page*response.size() < comments.getCount());
         responsePage.setSize(response.size());
+
+        Map<String, Object> additional = new HashMap<>();
+        additional.put("system_user_id", systemUserId);
+        additional.put("group_id", vkGroupId);
+        additional.put("post_id", vkPostId);
+        additional.put("comment_id", vkSuperCommentId);
+        sentrySender.sentryMessage("get one comment of vk post",
+                additional, Collections.singletonList(SentryTag.GetSubComments));
+
         return responsePage;
 
     }
@@ -130,6 +160,17 @@ public class VkCommentServiceImpl implements VkCommentService {
             response.setSuperCommentId(vkSuperCommentId);
             response.setGroupId(vkGroupId);
             response.setSystemUserId(sUser.getId());
+
+
+            Map<String, Object> additional = new HashMap<>();
+            additional.put("system_user_id", systemUserId);
+            additional.put("group_id", vkGroupId);
+            additional.put("post_id", vkPostId);
+            additional.put("comment_id", vkSuperCommentId);
+            additional.put("sub_comment_id", vkSubCommentId);
+            sentrySender.sentryMessage("get one comment of vk post",
+                    additional, Collections.singletonList(SentryTag.GetSubCommentById));
+
             return response;
         }
         throw new HttpNotFoundException("Comment (id: " + vkSuperCommentId + ") do't contain Sub Comment (id: "+
@@ -148,6 +189,7 @@ public class VkCommentServiceImpl implements VkCommentService {
         if(comment.getThread() != null) {
             cr.setSubCommentCount(comment.getThread().getCount());
         }
+
         return cr;
     }
 
