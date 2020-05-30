@@ -10,6 +10,7 @@ import ml.socshared.adapter.vk.service.VkPostService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 
 //TODO везде добавить проверку на существование access_token так, как он может быть пуст
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping("api/v1")
 @Slf4j
@@ -31,7 +33,8 @@ public class PostController implements VKAdapterPostAPI {
     }
 
     @Override
-    @GetMapping("/users/{systemUserId}/groups/{groupId}/posts/{postId}")
+    @PreAuthorize("hasRole('SERVICE')")
+    @GetMapping("private/users/{systemUserId}/groups/{groupId}/posts/{postId}")
     public PostResponse getPostOfGroupById(@PathVariable("systemUserId") UUID userId,
                                            @PathVariable("groupId") String groupId,
                                            @PathVariable("postId") String postId) {
@@ -46,7 +49,8 @@ public class PostController implements VKAdapterPostAPI {
     }
 
     @Override
-    @GetMapping("/users/{systemUserId}/groups/{groupId}/posts")
+    @PreAuthorize("hasRole('SERVICE')")
+    @GetMapping("private/users/{systemUserId}/groups/{groupId}/posts")
     public Page<PostResponse> getPostsOfGroup(@PathVariable("systemUserId") UUID userId,
                                               @PathVariable("groupId") String groupId,
                                               @RequestParam(value = "page", required = false, defaultValue ="1") int page,
@@ -62,7 +66,8 @@ public class PostController implements VKAdapterPostAPI {
     }
 
     @Override
-    @PostMapping(value = "/users/{systemUserId}/groups/{groupId}/posts",
+    @PreAuthorize("hasRole('SERVICE')")
+    @PostMapping(value = "private/users/{systemUserId}/groups/{groupId}/posts",
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public PostResponse addPostInGroup(@PathVariable UUID systemUserId,
                                        @PathVariable String groupId,
@@ -79,7 +84,8 @@ public class PostController implements VKAdapterPostAPI {
 
 
     @Override
-    @PatchMapping(value = "/users/{userId}/groups/{groupId}/posts/{postId}",
+    @PreAuthorize("hasRole('SERVICE')")
+    @PatchMapping(value = "private/users/{userId}/groups/{groupId}/posts/{postId}",
         consumes = {MediaType.APPLICATION_JSON_VALUE})
     public PostResponse updateAndGetPostInGroupById(@PathVariable UUID userId,
                                                     @PathVariable String groupId,
@@ -97,7 +103,8 @@ public class PostController implements VKAdapterPostAPI {
     }
 
     @Override
-    @PutMapping(value = "/users/{userId}/groups/{groupId}/posts/{postId}",
+    @PreAuthorize("hasRole('SERVICE')")
+    @PutMapping(value = "private/users/{userId}/groups/{groupId}/posts/{postId}",
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void updatePostInGroupById(@PathVariable UUID userId,
                                       @PathVariable String groupId,
@@ -114,7 +121,8 @@ public class PostController implements VKAdapterPostAPI {
     }
 
     @Override
-    @DeleteMapping(value = "/users/{userId}/groups/{groupId}/posts/{postId}")
+    @PreAuthorize("hasRole('SERVICE')")
+    @DeleteMapping(value = "private/users/{userId}/groups/{groupId}/posts/{postId}")
     public Map<String, String> removePostInGroupById(@PathVariable UUID userId,
                                                      @PathVariable String groupId,
                                                      @PathVariable String postId) {

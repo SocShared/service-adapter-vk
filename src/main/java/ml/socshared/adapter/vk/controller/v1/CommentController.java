@@ -9,10 +9,12 @@ import ml.socshared.adapter.vk.exception.impl.HttpInternalServerErrorException;
 import ml.socshared.adapter.vk.service.VkCommentService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping("api/v1")
 @Slf4j
@@ -25,12 +27,12 @@ public class CommentController implements VkAdapterCommentApi {
     }
 
 
-
-    @GetMapping("/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments")
+    @PreAuthorize("hasRole('SERVICE')")
+    @GetMapping("private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments")
     @Override
     public  Page<CommentResponse> getCommentsOfPost(@PathVariable UUID systemUserId, @PathVariable String vkGroupId,
                                                     @PathVariable String postId,
-                                                    @RequestParam(name="page", required=false, defaultValue="1") int page,
+                                                    @RequestParam(name="page", required=false, defaultValue="0") int page,
                                                     @RequestParam(name="count", required=false, defaultValue="10") int count) {
         log.info("Request of get post's comments");
         try{
@@ -44,8 +46,8 @@ public class CommentController implements VkAdapterCommentApi {
 
 
 
-
-    @GetMapping("/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}")
+    @PreAuthorize("hasRole('SERVICE')")
+    @GetMapping("private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}")
     @Override
     public CommentResponse getCommentOfPostById(@PathVariable UUID systemUserId,@PathVariable String vkGroupId,
                                                 @PathVariable String postId,
@@ -60,7 +62,8 @@ public class CommentController implements VkAdapterCommentApi {
         }
     }
 
-    @GetMapping("/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/sub_comments")
+    @PreAuthorize("hasRole('SERVICE')")
+    @GetMapping("private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/sub_comments")
     @Override
     public Page<SubCommentResponse> getSubComments(@PathVariable UUID systemUserId,@PathVariable String vkGroupId,
                                                    @PathVariable String postId, @PathVariable String commentId,
@@ -76,7 +79,8 @@ public class CommentController implements VkAdapterCommentApi {
         }
     }
 
-    @GetMapping("/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/sub_comments/{subCommentId}")
+    @PreAuthorize("hasRole('SERVICE')")
+    @GetMapping("private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/sub_comments/{subCommentId}")
     @Override
     public SubCommentResponse getSubComment(@PathVariable UUID systemUserId,@PathVariable String vkGroupId,
                                             @PathVariable String postId, @PathVariable String commentId,

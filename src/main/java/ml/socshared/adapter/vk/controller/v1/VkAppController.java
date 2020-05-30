@@ -9,12 +9,14 @@ import ml.socshared.adapter.vk.service.ApplicationService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
 @Slf4j
+@PreAuthorize("isAuthenticated()")
 @RequestMapping("api/v1")
 public class VkAppController  implements VkAdapterAppApi {
 
@@ -27,14 +29,16 @@ public class VkAppController  implements VkAdapterAppApi {
 
 
     @Override
-    @GetMapping("/users/{uuid}/info")
+    @PreAuthorize("hasRole('SERVICE')")
+    @GetMapping("private/users/{uuid}/info")
     public SystemUser getUsersInfo(@PathVariable(name="uuid") UUID id) throws HttpNotFoundException {
         log.info("Request of get user info by id: " + id);
         return appService.getUser(id);
     }
 
     @Override
-    @PostMapping(value = "/users/{user}/app/{vk_app_id}",
+    @PreAuthorize("hasRole('SERVICE')")
+    @PostMapping(value = "private/users/{user}/app/{vk_app_id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void appRegister(@PathVariable(name = "user") UUID systemUserID,
                             @PathVariable(name = "vk_app_id") String vkAppID,

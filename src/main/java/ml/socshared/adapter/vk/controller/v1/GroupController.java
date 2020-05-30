@@ -10,11 +10,12 @@ import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.service.VkGroupService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping("api/v1")
 @Slf4j
@@ -27,9 +28,9 @@ public class GroupController implements VkAdapterGroupApi {
         this.groupService = groupService;
     }
 
-
+    @PreAuthorize("hasRole('SERVICE')")
    // @Override
-    @GetMapping("/users/{systemUserId}/groups")
+    @GetMapping("private/users/{systemUserId}/groups")
     public Page<GroupResponse> getGroupsList
             (@PathVariable("systemUserId")                                 UUID userId,
              @RequestParam(name="page", required=false, defaultValue="1")  int page,
@@ -55,8 +56,9 @@ public class GroupController implements VkAdapterGroupApi {
 
     }
 
+    @PreAuthorize("hasRole('SERVICE')")
     @Override
-    @PostMapping("/users/{systemUserId}/groups/{groupId}")
+    @PostMapping("private/users/{systemUserId}/groups/{groupId}")
     public GroupResponse setGroup(@PathVariable("systemUserId") UUID userId,
                          @PathVariable("groupId") String groupId,
                          @RequestParam("isSelected") boolean isSelected)   {
@@ -69,7 +71,8 @@ public class GroupController implements VkAdapterGroupApi {
         }
     }
 
-    @GetMapping("/users/{systemUserId}/groups/{groupId}")
+    @PreAuthorize("hasRole('SERVICE')")
+    @GetMapping("private/users/{systemUserId}/groups/{groupId}")
     GroupResponse getGroupById(@PathVariable("systemUserId") UUID userId, @PathVariable("groupId") String groupId) {
         log.info("Request of get group info by id");
         try {
