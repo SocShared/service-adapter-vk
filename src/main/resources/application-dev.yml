@@ -8,6 +8,13 @@ spring:
     password: ${POSTGRES_PASS}
   jpa:
     generate-ddl: true
+  zipkin:
+    base-url: http://zipkin:9411/
+    service:
+      name: "socshared-vk-adapter"
+  main:
+    allow-bean-definition-overriding: true
+  
 
 logging:
   level:
