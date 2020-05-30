@@ -68,7 +68,7 @@ public class VkGroupServiceImpl implements VkGroupService {
         Page<GroupResponse> responsePage = new Page<>();
         responsePage.setSize(response.size());
         responsePage.setPage(page);
-        responsePage.setHasPrev(page>1);
+        responsePage.setHasPrev(page>0);
         responsePage.setHasNext(page*size < vkGroups.getCount());
         responsePage.setObject(response);
 

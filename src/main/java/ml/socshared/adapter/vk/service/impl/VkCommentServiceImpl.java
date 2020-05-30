@@ -54,7 +54,7 @@ public class VkCommentServiceImpl implements VkCommentService {
         Page<CommentResponse> response = new Page<>();
         response.setObject(comm);
         response.setPage(page);
-        response.setHasPrev(page > 1);
+        response.setHasPrev(page > 0);
         response.setHasNext(comments.getCount() > page*comm.size());
 
         Map<String, Object> additional = new HashMap<>();

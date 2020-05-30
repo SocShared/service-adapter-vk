@@ -67,7 +67,7 @@ public class CommentController implements VkAdapterCommentApi {
     @Override
     public Page<SubCommentResponse> getSubComments(@PathVariable UUID systemUserId,@PathVariable String vkGroupId,
                                                    @PathVariable String postId, @PathVariable String commentId,
-                                                   @RequestParam(name="page", required=false, defaultValue="1") int page,
+                                                   @RequestParam(name="page", required=false, defaultValue="0") int page,
                                                    @RequestParam(name="size", required=false, defaultValue= "10") int size) {
         log.info("Request of get subcomments");
         try{

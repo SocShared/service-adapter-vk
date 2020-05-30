@@ -41,7 +41,7 @@ public class VkPostServiceImpl implements VkPostService {
         BaseFunctions.checkGroupConnectionToUser(vkGroupId, sUser, log);
 
         client.setToken(sUser.getAccessToken());
-        int offset = (page-1)*size;
+        int offset = page*size;
         Paginator<Post> posts = client.getPostsOfGroup(vkGroupId, "all", offset, size);
         List<PostResponse> response = new LinkedList<>();
         for(Post el : posts.getResponse()) {
@@ -52,7 +52,7 @@ public class VkPostServiceImpl implements VkPostService {
         Page<PostResponse> result = new Page<>();
         result.setObject(response);
         result.setHasNext(posts.getCount() > (offset + size));
-        result.setHasPrev(page > 1);
+        result.setHasPrev(page > 0);
         result.setPage(page);
         result.setSize(size);
 

@@ -53,7 +53,7 @@ public class PostController implements VKAdapterPostAPI {
     @GetMapping("private/users/{systemUserId}/groups/{groupId}/posts")
     public Page<PostResponse> getPostsOfGroup(@PathVariable("systemUserId") UUID userId,
                                               @PathVariable("groupId") String groupId,
-                                              @RequestParam(value = "page", required = false, defaultValue ="1") int page,
+                                              @RequestParam(value = "page", required = false, defaultValue ="0") int page,
                                               @RequestParam(value = "size", required = false, defaultValue ="10")int size) {
         log.info("Request of get posts page");
         try {

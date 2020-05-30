@@ -33,7 +33,7 @@ public class GroupController implements VkAdapterGroupApi {
     @GetMapping("private/users/{systemUserId}/groups")
     public Page<GroupResponse> getGroupsList
             (@PathVariable("systemUserId")                                 UUID userId,
-             @RequestParam(name="page", required=false, defaultValue="1")  int page,
+             @RequestParam(name="page", required=false, defaultValue="0")  int page,
              @RequestParam(name="size", required=false, defaultValue="10") int size)
             throws HttpNotFoundException{
         try {
