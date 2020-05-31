@@ -16,10 +16,13 @@ dependencies {
     //sentry
     implementation 'io.sentry:sentry-spring:1.7.23'
     implementation 'io.sentry:sentry:1.7.23'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
     //API Description Generator
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-   // implementation  group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-ribbon', version: '2.2.2.RELEASE'
+    implementation  group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-ribbon', version: '2.2.2.RELEASE'
     //RestControllers + tomcat
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.5.RELEASE'
     //Logging

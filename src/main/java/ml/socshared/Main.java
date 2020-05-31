@@ -1,4 +1,4 @@
-package ml.socshared.adapter.vk;
+package ml.socshared;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
