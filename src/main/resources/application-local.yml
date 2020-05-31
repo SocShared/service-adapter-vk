@@ -8,3 +8,10 @@ spring:
     url: jdbc:h2:mem:vk?useUnicode=yes&characterEncoding=UTF-8
     driver-class-name: org.h2.Driver
     username: sa
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: auditevents, beans, caches, conditions, configprops, health, httptrace, info, loggers, metrics, mappings, shutdown
