@@ -31,14 +31,14 @@ public class VkAppController  implements VkAdapterAppApi {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping("private/users/{uuid}/info")
+    @GetMapping("/private/users/{uuid}/info")
     public SystemUser getUsersInfo(@PathVariable(name="uuid") UUID id) throws HttpNotFoundException {
         log.info("Request of get user info by id: " + id);
         return appService.getUser(id);
     }
 
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping("private/users/{uuid}/soc_info")
+    @GetMapping("/private/users/{uuid}/vk/data")
     SocUserInfoResponse getSocUserInfo(@PathVariable UUID uuid) {
         log.info("Request get social user info");
         try{
@@ -47,13 +47,16 @@ public class VkAppController  implements VkAdapterAppApi {
             String msg = "VkClien Error: " + e.getMessage() + "(Code: " + e.getErrorType() + ")";
             log.warn(msg);
             throw new HttpInternalServerErrorException(msg);
+        } catch (HttpNotFoundException exp) {
+            log.trace("user with id not found", exp);
+            return null;
         }
 
     }
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @PostMapping(value = "private/users/{user}/app/",
+    @PostMapping(value = "/private/users/{user}/app/",
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void appRegister(@PathVariable(name = "user") UUID systemUserID,
                          //   @PathVariable(name = "vk_app_id") String vkAppID,

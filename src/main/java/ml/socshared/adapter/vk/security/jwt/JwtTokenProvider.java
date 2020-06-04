@@ -1,11 +1,11 @@
-package ml.socshared.security.jwt;
+package ml.socshared.adapter.vk.security.jwt;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ml.socshared.security.client.AuthClient;
-import ml.socshared.security.model.ServiceDetails;
-import ml.socshared.security.request.CheckTokenRequest;
+import ml.socshared.adapter.vk.security.client.AuthClient;
+import ml.socshared.adapter.vk.security.model.ServiceDetails;
+import ml.socshared.adapter.vk.security.request.CheckTokenRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

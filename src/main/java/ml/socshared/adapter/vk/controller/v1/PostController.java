@@ -34,7 +34,7 @@ public class PostController implements VKAdapterPostAPI {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping("private/users/{systemUserId}/groups/{groupId}/posts/{postId}")
+    @GetMapping("/private/users/{systemUserId}/groups/{groupId}/posts/{postId}")
     public PostResponse getPostOfGroupById(@PathVariable("systemUserId") UUID userId,
                                            @PathVariable("groupId") String groupId,
                                            @PathVariable("postId") String postId) {
@@ -50,7 +50,7 @@ public class PostController implements VKAdapterPostAPI {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping("private/users/{systemUserId}/groups/{groupId}/posts")
+    @GetMapping("/private/users/{systemUserId}/groups/{groupId}/posts")
     public Page<PostResponse> getPostsOfGroup(@PathVariable("systemUserId") UUID userId,
                                               @PathVariable("groupId") String groupId,
                                               @RequestParam(value = "page", required = false, defaultValue ="0") int page,
@@ -67,7 +67,7 @@ public class PostController implements VKAdapterPostAPI {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @PostMapping(value = "private/users/{systemUserId}/groups/{groupId}/posts",
+    @PostMapping(value = "/private/users/{systemUserId}/groups/{groupId}/posts",
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public PostResponse addPostInGroup(@PathVariable UUID systemUserId,
                                        @PathVariable String groupId,
@@ -85,7 +85,7 @@ public class PostController implements VKAdapterPostAPI {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @PatchMapping(value = "private/users/{userId}/groups/{groupId}/posts/{postId}",
+    @PatchMapping(value = "/private/users/{userId}/groups/{groupId}/posts/{postId}",
         consumes = {MediaType.APPLICATION_JSON_VALUE})
     public PostResponse updateAndGetPostInGroupById(@PathVariable UUID userId,
                                                     @PathVariable String groupId,
@@ -104,7 +104,7 @@ public class PostController implements VKAdapterPostAPI {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @PutMapping(value = "private/users/{userId}/groups/{groupId}/posts/{postId}",
+    @PutMapping(value = "/private/users/{userId}/groups/{groupId}/posts/{postId}",
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void updatePostInGroupById(@PathVariable UUID userId,
                                       @PathVariable String groupId,
@@ -122,7 +122,7 @@ public class PostController implements VKAdapterPostAPI {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @DeleteMapping(value = "private/users/{userId}/groups/{groupId}/posts/{postId}")
+    @DeleteMapping(value = "/private/users/{userId}/groups/{groupId}/posts/{postId}")
     public Map<String, String> removePostInGroupById(@PathVariable UUID userId,
                                                      @PathVariable String groupId,
                                                      @PathVariable String postId) {

@@ -1,7 +1,7 @@
-package ml.socshared.security.client;
+package ml.socshared.adapter.vk.security.client;
 
-import ml.socshared.security.request.CheckTokenRequest;
-import ml.socshared.security.response.SuccessResponse;
+import ml.socshared.adapter.vk.domain.response.SuccessResponse;
+import ml.socshared.adapter.vk.security.request.CheckTokenRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

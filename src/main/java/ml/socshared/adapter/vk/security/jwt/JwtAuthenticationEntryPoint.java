@@ -1,4 +1,4 @@
-package ml.socshared.security.jwt;
+package ml.socshared.adapter.vk.security.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

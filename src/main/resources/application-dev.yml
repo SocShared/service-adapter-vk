@@ -21,6 +21,9 @@ management:
       exposure:
         include: auditevents, beans, caches, conditions, configprops, health, httptrace, info, loggers, metrics, mappings, shutdown
 
+feign:
+  url:
+    auth: {AUTH_SERVICE:http://auth-service:9999/}
 
 
 logging:

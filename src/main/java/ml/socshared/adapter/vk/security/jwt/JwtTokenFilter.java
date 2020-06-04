@@ -1,4 +1,4 @@
-package ml.socshared.security.jwt;
+package ml.socshared.adapter.vk.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

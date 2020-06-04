@@ -28,7 +28,7 @@ public class CommentController implements VkAdapterCommentApi {
 
 
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping("private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments")
+    @GetMapping("/private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments")
     @Override
     public  Page<CommentResponse> getCommentsOfPost(@PathVariable UUID systemUserId, @PathVariable String vkGroupId,
                                                     @PathVariable String postId,
@@ -47,7 +47,7 @@ public class CommentController implements VkAdapterCommentApi {
 
 
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping("private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}")
+    @GetMapping("/private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}")
     @Override
     public CommentResponse getCommentOfPostById(@PathVariable UUID systemUserId,@PathVariable String vkGroupId,
                                                 @PathVariable String postId,
@@ -63,7 +63,7 @@ public class CommentController implements VkAdapterCommentApi {
     }
 
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping("private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/sub_comments")
+    @GetMapping("/private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/sub_comments")
     @Override
     public Page<SubCommentResponse> getSubComments(@PathVariable UUID systemUserId,@PathVariable String vkGroupId,
                                                    @PathVariable String postId, @PathVariable String commentId,
@@ -80,7 +80,7 @@ public class CommentController implements VkAdapterCommentApi {
     }
 
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping("private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/sub_comments/{subCommentId}")
+    @GetMapping("/private/users/{systemUserId}/groups/{vkGroupId}/posts/{postId}/comments/{commentId}/sub_comments/{subCommentId}")
     @Override
     public SubCommentResponse getSubComment(@PathVariable UUID systemUserId,@PathVariable String vkGroupId,
                                             @PathVariable String postId, @PathVariable String commentId,

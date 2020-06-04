@@ -30,7 +30,7 @@ public class GroupController implements VkAdapterGroupApi {
 
     @PreAuthorize("hasRole('SERVICE')")
    // @Override
-    @GetMapping("private/users/{systemUserId}/groups")
+    @GetMapping("/private/users/{systemUserId}/groups")
     public Page<GroupResponse> getGroupsList
             (@PathVariable("systemUserId")                                 UUID userId,
              @RequestParam(name="page", required=false, defaultValue="0")  int page,
@@ -58,7 +58,7 @@ public class GroupController implements VkAdapterGroupApi {
 
     @PreAuthorize("hasRole('SERVICE')")
     @Override
-    @PostMapping("private/users/{systemUserId}/groups/{groupId}")
+    @PostMapping("/private/users/{systemUserId}/groups/{groupId}")
     public GroupResponse setGroup(@PathVariable("systemUserId") UUID userId,
                          @PathVariable("groupId") String groupId,
                          @RequestParam("isSelected") boolean isSelected)   {
@@ -72,7 +72,7 @@ public class GroupController implements VkAdapterGroupApi {
     }
 
     @PreAuthorize("hasRole('SERVICE')")
-    @GetMapping("private/users/{systemUserId}/groups/{groupId}")
+    @GetMapping("/private/users/{systemUserId}/groups/{groupId}")
     GroupResponse getGroupById(@PathVariable("systemUserId") UUID userId, @PathVariable("groupId") String groupId) {
         log.info("Request of get group info by id");
         try {
