@@ -77,6 +77,11 @@ public class ClientConfiguration {
                         new VKJsonResponseConverter<Paginator<VkSubComment>>(new TypeToken<>(){}))
                 .registerTypeAdapter(new TypeToken<Paginator<VkSubComment>>(){}.getType(),
                         new VKJsonPaginatorConverter<VkSubComment>(new TypeToken<>(){}))
+
+                .registerTypeAdapter(new TypeToken<VKResponse<List<User>>>(){}.getType(),
+                        new VKJsonResponseConverter<List<User>>(new TypeToken<>(){}))
+                .registerTypeAdapter(new TypeToken<List<User>>(){}.getType(),
+                        new VKJsonList<User>(new TypeToken<>(){}))
                 .create();
         return new GsonDecoder(gson);
     }

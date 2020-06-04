@@ -19,7 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
-@Profile({Constants.DEV_PROFILE, Constants.PROD_PROFILE, Constants.LOCAL_PROFILE})
+@Profile({Constants.DEV_PROFILE, Constants.PROD_PROFILE})
 @Slf4j
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor

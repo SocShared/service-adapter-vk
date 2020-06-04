@@ -14,12 +14,12 @@ import java.util.Map;
              configuration= ClientConfiguration.class)
 public interface VKFeignClient {
 
-    @RequestLine("GET /users.get?user_ids={ids}&access_token={token}&v=105.3")
+    @RequestLine("GET /users.get?user_ids={ids}&access_token={token}&v=103.5")
     VKResponse<List<User>> getUsersInfo(@Param(value ="ids") String ids,
                                         @Param(value ="token")String token);
 
     @RequestLine("GET /users.get?access_token={token}&v=103.5")
-    VKResponse<List<User>> getCurrentUserInfo(@Param(value ="token")String token);
+    VKResponse<List<User>> getCurrentUserInfo(@Param("token") String token);
 
     @RequestLine("GET /groups.get?fields={fields}&extended={extended}" +
             "&filter={filter}&access_token={token}&offset={offset}&count={count}&v=105.3")

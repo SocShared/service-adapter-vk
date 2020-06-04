@@ -14,6 +14,7 @@ public class VKClient {
 
     private VKFeignClient client;
     private String token;
+    final private String vkApiVersion = "103.5";
 
    public VKClient() {
        ClientConfiguration config = new ClientConfiguration();

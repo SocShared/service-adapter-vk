@@ -12,7 +12,7 @@ import static ml.socshared.security.config.Constants.TEST_PROFILE;
 
 @Configuration
 @EnableWebSecurity
-@Profile({TEST_PROFILE})
+@Profile({Constants.LOCAL_PROFILE})
 @Slf4j
 public class SecurityConfigLocal extends WebSecurityConfigurerAdapter {
 

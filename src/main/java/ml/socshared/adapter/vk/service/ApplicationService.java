@@ -2,9 +2,11 @@ package ml.socshared.adapter.vk.service;
 
 
 import ml.socshared.adapter.vk.domain.db.SystemUser;
+import ml.socshared.adapter.vk.domain.response.SocUserInfoResponse;
 import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.repository.SystemUserRepository;
 import ml.socshared.adapter.vk.vkclient.VKClient;
+import ml.socshared.adapter.vk.vkclient.domain.User;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +45,7 @@ public class ApplicationService {
         client.setToken(accessToken);
        // User info = client.getCurrentUserInfo();
        // user.setVkUserId(String.valueOf(info.getId()));
-        user.setGroupVkId(appVkId);
+        //user.setGroupVkId(appVkId);
         user.setAccessToken(accessToken);
         usersRepository.save(user);
     }
@@ -72,6 +74,18 @@ public class ApplicationService {
         user.setAccessToken(accessTokenVk);
         usersRepository.save(user);
     }
+    public SocUserInfoResponse getUserSocialInformation(UUID systemUserId) throws VKClientException {
+        SystemUser user = getUser(systemUserId);
+        client.setToken(user.getAccessToken());
+        User vkUser = client.getCurrentUserInfo();
+        SocUserInfoResponse response = new SocUserInfoResponse();
+        response.setAccountId(vkUser.getId());
+        response.setFirstName(vkUser.getFirst_name());
+        response.setLastName(vkUser.getLast_name());
+        response.setSystemUserId(systemUserId);
+        return response;
+    }
+
     private SystemUserRepository usersRepository;
     private VKClient client;
 }

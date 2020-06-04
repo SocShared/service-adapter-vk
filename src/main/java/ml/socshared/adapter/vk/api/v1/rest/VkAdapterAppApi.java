@@ -24,5 +24,5 @@ public interface VkAdapterAppApi {
             @ApiResponse(code=200, message = "Successful!"),
             @ApiResponse(code=404, message = "When user with uuid not found")
             })
-    void appRegister(UUID systemUserId, String vkAppId, String accessToken);
+    void appRegister(UUID systemUserId, String accessToken);
 }
