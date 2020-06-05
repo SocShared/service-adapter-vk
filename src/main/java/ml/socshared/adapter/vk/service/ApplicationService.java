@@ -27,9 +27,6 @@ public class ApplicationService {
 
 
 
-    //TODO Изменить поведения. В данный момент при отстутсвии пользователя он добавляется, /
-     // необходимо получать пользователя из KeyCloak и тогда при его отсутсвии в базе добавлять
-    //При отсутсвии пользователя в KeyCloak - возвращать ошибку 404
     public void setApp(UUID userId, String appVkId, String accessToken) throws VKClientException {
         Optional<SystemUser> userOptional = usersRepository.findById(userId);
         SystemUser user = null;
@@ -46,6 +43,15 @@ public class ApplicationService {
         user.setAccessToken(accessToken);
         usersRepository.save(user);
     }
+
+    public void unsetApp(UUID systemUserId) {
+        Optional<SystemUser> userOptional = usersRepository.findById(systemUserId);
+        if(userOptional.isEmpty()) {
+            throw new HttpNotFoundException("user with id " + systemUserId + " not found");
+        }
+       usersRepository.delete(userOptional.get());
+    }
+
 
     public void setGroupId(UUID userId, String groupVkId) throws HttpNotFoundException {
         SystemUser su = getUser(userId);
@@ -81,6 +87,8 @@ public class ApplicationService {
         response.setSystemUserId(systemUserId);
         return response;
     }
+
+
 
     private SystemUserRepository usersRepository;
     private VKClient client;

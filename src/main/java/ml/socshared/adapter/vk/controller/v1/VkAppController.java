@@ -73,4 +73,11 @@ public class VkAppController  implements VkAdapterAppApi {
 
     }
 
+    @PreAuthorize("hasRole('SERVICE')")
+    @DeleteMapping("/private/users/{systemUserId}/app/")
+    public void appReset(@PathVariable UUID systemUserId) {
+        log.info("Request of unregister vk application");
+        appService.unsetApp(systemUserId);
+    }
+
 }
