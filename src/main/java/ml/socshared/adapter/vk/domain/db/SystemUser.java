@@ -18,9 +18,6 @@ public class SystemUser {
     @Column(name="vk_user_id", unique=true)
     private String vkUserId;
 
-    @Column(name="vk_group_id", unique=true)
-    private String groupVkId;
-
     @Column(name="acess_token")
     private String accessToken;
 }

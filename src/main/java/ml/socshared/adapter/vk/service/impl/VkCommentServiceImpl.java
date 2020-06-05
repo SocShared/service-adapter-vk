@@ -7,7 +7,6 @@ import ml.socshared.adapter.vk.domain.response.Page;
 import ml.socshared.adapter.vk.domain.response.SubCommentResponse;
 import ml.socshared.adapter.vk.exception.impl.HttpBadRequestException;
 import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
-import ml.socshared.adapter.vk.service.BaseFunctions;
 import ml.socshared.adapter.vk.service.VkAuthorizationService;
 import ml.socshared.adapter.vk.service.VkCommentService;
 import ml.socshared.adapter.vk.service.sentry.SentrySender;
@@ -41,7 +40,7 @@ public class VkCommentServiceImpl implements VkCommentService {
     @Override
     public Page<CommentResponse> getCommentsOfPost(UUID systemUserId, String vkGroupId, String vkPostId,
                                                    int page, int size) throws VKClientException {
-        getAndCheckUser(systemUserId, vkGroupId);
+        getUser(systemUserId);
         int offset = page*size;
         Paginator<VkComment> comments = client.getCommentsOfPost(vkGroupId, vkPostId, offset, size);
         List<CommentResponse> comm = new LinkedList<>();
@@ -73,7 +72,7 @@ public class VkCommentServiceImpl implements VkCommentService {
 
     @Override
     public CommentResponse getCommentOfPost(UUID systemUserId, String vkGroupId, String vkPostId, String vkCommentId) throws VKClientException {
-        getAndCheckUser(systemUserId, vkGroupId);
+        getUser(systemUserId);
         VkComment comment = client.getCommentById(vkGroupId, vkCommentId);
         if(!vkPostId.equals(String.valueOf(comment.getPostId()))) {
             throw new HttpBadRequestException("Post (" + vkPostId + ") don't have a comment with id " + vkCommentId);
@@ -96,7 +95,7 @@ public class VkCommentServiceImpl implements VkCommentService {
     @Override
     public Page<SubCommentResponse> getSubComments(UUID systemUserId, String vkGroupId, String vkPostId,
                                                    String vkSuperCommentId, int page, int size) throws VKClientException {
-        SystemUser sUser = getAndCheckUser(systemUserId, vkGroupId);
+        SystemUser sUser = getUser(systemUserId);
         int offset = page*size;
         Paginator<VkSubComment> comments = client.getSubComments(vkGroupId, vkPostId, vkSuperCommentId, offset, size);
         List<SubCommentResponse> response = new LinkedList<>();
@@ -129,7 +128,7 @@ public class VkCommentServiceImpl implements VkCommentService {
     @Override
     public SubCommentResponse getSubCommentById(UUID systemUserId, String vkGroupId, String vkPostId,
                                                 String vkSuperCommentId, String vkSubCommentId) throws VKClientException {
-        SystemUser sUser = getAndCheckUser(systemUserId, vkGroupId);
+        SystemUser sUser = getUser(systemUserId);
         int sId = Integer.parseInt(vkSubCommentId);
         int residual = 1;
         int size = 10;
@@ -193,9 +192,8 @@ public class VkCommentServiceImpl implements VkCommentService {
         return cr;
     }
 
-    public SystemUser getAndCheckUser(UUID user, String vkGroup) {
+    public SystemUser getUser(UUID user) {
         SystemUser sUser = vkAuth.getUser(user);
-        BaseFunctions.checkGroupConnectionToUser(vkGroup, sUser, log);
         client.setToken(sUser.getAccessToken());
         return sUser;
     }

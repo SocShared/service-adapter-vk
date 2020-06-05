@@ -9,5 +9,4 @@ import java.util.UUID;
 @Repository
 public interface SystemUserRepository extends CrudRepository<SystemUser, UUID> {
     SystemUser findByVkUserId(Integer vkId);
-    SystemUser findByGroupVkId(String id);
 }

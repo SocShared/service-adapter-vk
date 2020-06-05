@@ -56,20 +56,7 @@ public class GroupController implements VkAdapterGroupApi {
 
     }
 
-    @PreAuthorize("hasRole('SERVICE')")
-    @Override
-    @PostMapping("/private/users/{systemUserId}/groups/{groupId}")
-    public GroupResponse setGroup(@PathVariable("systemUserId") UUID userId,
-                         @PathVariable("groupId") String groupId,
-                         @RequestParam("isSelected") boolean isSelected)   {
-        log.info("Request of set group as selected");
-        try{
-            return groupService.selectGroup(userId, groupId, isSelected);
-        } catch (VKClientException e) {
-            log.warn("VkClient Error: " + e.getMessage());
-            throw new HttpInternalServerErrorException(e.getMessage());
-        }
-    }
+
 
     @PreAuthorize("hasRole('SERVICE')")
     @GetMapping("/private/users/{systemUserId}/groups/{groupId}")

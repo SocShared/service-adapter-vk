@@ -60,8 +60,6 @@ public class VkGroupServiceImpl implements VkGroupService {
         List<GroupResponse> response = new LinkedList<>();
         for(VkGroup group : vkGroups.getResponse()) {
             GroupResponse g = convertVkGroupToGroupResponseDefault(group);
-            boolean isSelected = group.getId().equals(sUser.getGroupVkId());
-            g.setSelected(isSelected);
             g.setSystemUserId(systemUserId);
             response.add(g);
         }
@@ -99,60 +97,7 @@ public class VkGroupServiceImpl implements VkGroupService {
         return response;
     }
 
-    @Override
-    public GroupResponse selectGroup(UUID systemUserId, String vkGroupId, boolean isSelected) throws VKClientException {
-        SystemUser sUser = vkAuth.getUser(systemUserId);
-        client.setToken(sUser.getAccessToken());
-        VkGroup group = null;
-        GroupResponse g = null;
-        if(isSelected) {
-            group = client.getGroupInfo(vkGroupId, Arrays.asList("members_count", "is_admin"));
-            if(!group.getAdditionalFields().containsKey("is_admin")) {
-                String msg = "Response of vk don't containing was requested field is_admin";
-                log.warn(msg);
-                throw new VKClientException(msg,new ErrorType());
-            }
-            boolean is_selected= false;
-            if("1".equals(group.getAdditionalFields().get("is_admin"))) {
-                sUser.setGroupVkId(group.getId());
-                is_selected = true;
-            }  else {
-                //TODO если пришел запрос на добавление в  выбранные группы, которы не являются пользователь админ то это ошибка
-                throw new HttpBadRequestException("You don't connect group where you not have admin role");
-            }
-            appService.updateUser(sUser);
-            g = convertVkGroupToGroupResponseDefault(group);
-            g.setSelected(is_selected);
-        } else {
-            if(!vkGroupId.equals(sUser.getGroupVkId())) {
-                log.warn("User (" + systemUserId + ") don't selected group (" + vkGroupId + ")");
-                throw new HttpNotFoundException("group this id not found");
-            }
-            group = client.getGroupInfo(vkGroupId, Arrays.asList("members_count", "is_admin"));
-            if(!group.getAdditionalFields().containsKey("is_admin")) {
-                log.warn("Response of vk don't containing was requested field is_admin");
-                throw new VKClientException(new ErrorType());
-            }
-            boolean is_turn_selected= false;
-            if("1".equals(group.getAdditionalFields().get("is_admin"))) {
-                sUser.setGroupVkId(null);
-                is_turn_selected = true;
-            }
-            appService.updateUser(sUser);
-            g = convertVkGroupToGroupResponseDefault(group);
-            g.setSelected(!is_turn_selected);
-        }
 
-
-        Map<String, Object> additional = new HashMap<>();
-        additional.put("system_user_id", systemUserId);
-        additional.put("group_id", systemUserId);
-        additional.put("is_selecting", isSelected);
-        sentrySender.sentryMessage("select vk group", additional,
-                Collections.singletonList(SentryTag.SelectGroup));
-
-        return g;
-    }
 
     static public GroupResponse convertVkGroupToGroupResponseDefault(VkGroup vkGroup) {
         GroupResponse g = new GroupResponse();

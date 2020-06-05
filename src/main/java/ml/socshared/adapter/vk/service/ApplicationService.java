@@ -25,9 +25,6 @@ public class ApplicationService {
         this.client = client;
     }
 
-    public SystemUser findUserByGroup(String groupId) {
-        return usersRepository.findByGroupVkId(groupId);
-    }
 
 
     //TODO Изменить поведения. В данный момент при отстутсвии пользователя он добавляется, /
@@ -52,7 +49,6 @@ public class ApplicationService {
 
     public void setGroupId(UUID userId, String groupVkId) throws HttpNotFoundException {
         SystemUser su = getUser(userId);
-        su.setGroupVkId(groupVkId);
         usersRepository.save(su);
     }
 

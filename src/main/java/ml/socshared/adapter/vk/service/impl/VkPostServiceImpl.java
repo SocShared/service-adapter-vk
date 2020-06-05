@@ -38,8 +38,6 @@ public class VkPostServiceImpl implements VkPostService {
     public Page<PostResponse> getPostsOfGroup(UUID systemUserId, String vkGroupId, int page, int size) throws VKClientException {
         SystemUser sUser = vkAuth.getUser(systemUserId);
 
-        BaseFunctions.checkGroupConnectionToUser(vkGroupId, sUser, log);
-
         client.setToken(sUser.getAccessToken());
         int offset = page*size;
         Paginator<Post> posts = client.getPostsOfGroup(vkGroupId, "all", offset, size);
@@ -71,8 +69,6 @@ public class VkPostServiceImpl implements VkPostService {
     public PostResponse getPostById(UUID systemUserId, String vkGroupId, String vkPostId) throws VKClientException {
         SystemUser sUser = vkAuth.getUser(systemUserId);
 
-        BaseFunctions.checkGroupConnectionToUser(vkGroupId, sUser, log);
-
         Post vkPost = client.getPostOfGroup(vkGroupId, vkPostId);
 
         Map<String, Object> additional = new HashMap<>();
@@ -90,7 +86,6 @@ public class VkPostServiceImpl implements VkPostService {
         SystemUser sUser = vkAuth.getUser(systemUserId);
         client.setToken(sUser.getAccessToken());
 
-        BaseFunctions.checkGroupConnectionToUser(vkGroupId, sUser, log);
 
         String postId =  client.sendPostToGroup(vkGroupId, message);
         PostResponse result = new PostResponse();
@@ -114,8 +109,6 @@ public class VkPostServiceImpl implements VkPostService {
         SystemUser sUser = vkAuth.getUser(systemUserId);
         client.setToken(sUser.getAccessToken());
 
-        BaseFunctions.checkGroupConnectionToUser(vkGroupId, sUser, log);
-
         Map<String, Object> additional = new HashMap<>();
         additional.put("system_user_id", systemUserId);
         additional.put("group_id", vkGroupId);
@@ -131,8 +124,6 @@ public class VkPostServiceImpl implements VkPostService {
         SystemUser sUser = vkAuth.getUser(systemUserId);
         client.setToken(sUser.getVkUserId());
         client.setToken(sUser.getAccessToken());
-
-        BaseFunctions.checkGroupConnectionToUser(vkGroupId, sUser, log);
 
         Map<String, Object> additional = new HashMap<>();
         additional.put("system_user_id", systemUserId);
