@@ -23,7 +23,7 @@ management:
 
 feign:
   url:
-    auth: {AUTH_SERVICE:http://auth-service:9999/}
+    auth: ${AUTH_SERVICE:http://auth-service:9999/}
 
 
 logging:
