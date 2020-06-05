@@ -73,10 +73,10 @@ public class GroupController implements VkAdapterGroupApi {
 
     @PreAuthorize("hasRole('SERVICE')")
     @GetMapping("/private/users/{systemUserId}/groups/{groupId}")
-    GroupResponse getGroupById(@PathVariable("systemUserId") UUID userId, @PathVariable("groupId") String groupId) {
+    GroupResponse getGroupById(@PathVariable UUID systemUserId, @PathVariable String groupId) {
         log.info("Request of get group info by id");
         try {
-            return groupService.getUserGroupbyId(userId, groupId);
+            return groupService.getUserGroupbyId(systemUserId, groupId);
         } catch (VKClientException e) {
             log.warn("VkClient Error:" + e.getMessage());
             throw new HttpInternalServerErrorException(e.getMessage());

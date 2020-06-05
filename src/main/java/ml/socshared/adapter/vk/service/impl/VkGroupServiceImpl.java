@@ -87,7 +87,7 @@ public class VkGroupServiceImpl implements VkGroupService {
         client.setToken(sUser.getAccessToken());
         VkGroup group = client.getGroupInfo(vkGroupId, Collections.singletonList("members_count"));
         GroupResponse response = convertVkGroupToGroupResponseDefault(group);
-        response.setSelected(response.getGroupId().equals(sUser.getGroupVkId()));
+        //response.setSelected(response.getGroupId().equals(sUser.getGroupVkId()));
 
         Map<String, Object> additional = new HashMap<>();
         additional.put("system_user_id", systemUserId);

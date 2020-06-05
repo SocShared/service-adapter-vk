@@ -15,3 +15,7 @@ management:
     web:
       exposure:
         include: auditevents, beans, caches, conditions, configprops, health, httptrace, info, loggers, metrics, mappings, shutdown
+
+feign:
+  url:
+    auth: ${AUTH_SERVICE:https://auth.socshared.ml}
