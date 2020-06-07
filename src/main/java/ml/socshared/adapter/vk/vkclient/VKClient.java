@@ -1,11 +1,17 @@
 package ml.socshared.adapter.vk.vkclient;
 
 import feign.Feign;
+import feign.form.FormEncoder;
 import ml.socshared.adapter.vk.vkclient.config.ClientConfiguration;
 import ml.socshared.adapter.vk.vkclient.domain.*;
 import ml.socshared.adapter.vk.vkclient.exception.InvalidParameterException;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.cloud.openfeign.support.SpringEncoder;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,13 +21,16 @@ public class VKClient {
     private VKFeignClient client;
     private String token;
     final private String vkApiVersion = "103.5";
+    @Autowired
+    ObjectFactory<HttpMessageConverters> messageConverters;
 
    public VKClient() {
        ClientConfiguration config = new ClientConfiguration();
        // this.token = accessToken;
+
         this.client = Feign.builder()
                 .decoder(config.getDecoder())
-                //.encoder(config.getEncoder())
+                .encoder(new FormEncoder(new SpringEncoder(this.messageConverters)))
                 .target(VKFeignClient.class, "https://api.vk.com/method");
     }
     public void setToken(String token) {
@@ -107,7 +116,14 @@ public class VKClient {
     }
 
     public String sendPostToGroup(String vkGroupId, String message) throws VKClientException {
-       VKResponse<Map<String, String>> result = client.sendPost("-"+vkGroupId, message,  token);
+        Map<String, String> params = new HashMap<>();
+        params.put("owner_id", "-" + vkGroupId);
+        params.put("message", message);
+        params.put("close_comments", "0");
+        params.put("v", "103.5");
+        params.put("access_token", token);
+        params.put("from_group", "1");
+       VKResponse<Map<String, String>> result = client.sendPost(params);
        if(result.isError()) {
            throw new VKClientException(result.getError());
        } else {

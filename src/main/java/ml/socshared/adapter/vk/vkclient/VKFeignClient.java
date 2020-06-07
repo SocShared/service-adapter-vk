@@ -1,6 +1,7 @@
 package ml.socshared.adapter.vk.vkclient;
 
 
+import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import ml.socshared.adapter.vk.vkclient.config.ClientConfiguration;
@@ -42,10 +43,9 @@ public interface VKFeignClient {
     VKResponse<List<Post>> getPost(@Param("extendPostId") String extendPostId,
                                          @Param("token") String token);
 
-    @RequestLine("GET /wall.post?owner_id={groupId}&from_group=1&message={message}&close_comments=0&mute_notifications=0" +
-            "&access_token={token}&v=103.5")
-    VKResponse<Map<String, String>> sendPost(@Param("groupId")String groupId,@Param("message") String message,
-                                             @Param("token") String token);
+    @RequestLine("POST /wall.post")
+    @Headers("Content-Type: application/x-www-form-urlencoded")
+    VKResponse<Map<String, String>> sendPost(Map<String, ?> formParams);
 
     @RequestLine("GET /wall.edit?owner_id={groupId}&post_id={post_id}&from_group=1&message={message}" +
             "&close_comments=0&mute_notifications=0&access_token={token}&v=103.5")

@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import feign.codec.Decoder;
+import feign.codec.Encoder;
 import feign.gson.GsonDecoder;
+import feign.gson.GsonEncoder;
 import ml.socshared.adapter.vk.vkclient.config.converter.*;
 import ml.socshared.adapter.vk.vkclient.domain.*;
 
@@ -86,18 +88,8 @@ public class ClientConfiguration {
         return new GsonDecoder(gson);
     }
 
-//    @Bean
-//    public Encoder getEncoder() {
-//        Gson gson = new GsonBuilder()
-//                .registerTypeAdapter(new TypeToken<VKResponse<List<User>>>(){}.getType(),
-//                        new VKJsonResponseUsersListConverter())
-//                .registerTypeAdapter(new TypeToken<VKResponse<Paginator<VkGroup>>>(){}.getType(),
-//                        new VKJsonResponsePaginationGroupConverter())
-//                .registerTypeAdapter(VkGroup.class,
-//                        new VKJsonGroupConverter())
-//                .registerTypeAdapter(new TypeToken<VKResponse<VkGroup>>(){}.getType(),
-//                        new VKJsonResponseGroupConverter())
-//                .create();
-//        return new GsonEncoder(gson);
-//    }
+    public Encoder getEncoder() {
+        Gson gson = new GsonBuilder().create();
+        return  new GsonEncoder(gson);
+    }
 }
