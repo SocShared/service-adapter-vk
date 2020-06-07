@@ -3,7 +3,7 @@ package ml.socshared.adapter.vk.domain.response;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -18,6 +18,6 @@ public class PostResponse {
     Integer likesCount = 0;
     Integer repostsCount = 0;
     Integer viewsCount = 0;
-    Date createdDate = new Date();//TODO поменять на LocalDateTime
-    Date updateDate;
+    LocalDateTime createdDate;
+    LocalDateTime updateDate;
 }

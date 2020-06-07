@@ -16,6 +16,7 @@ import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -139,8 +140,9 @@ public class VkPostServiceImpl implements VkPostService {
         final long ms = 1000;
         BaseFunctions.modifyOwnerId(post);
         PostResponse p = new PostResponse();
-        p.setCreatedDate(new Date(post.getDate()*ms));
-        p.setUpdateDate(new Date(0));
+        Date date = new Date(post.getDate()*ms);
+        p.setCreatedDate(LocalDateTime.of(date.getYear(), date.getMonth(), date.getDay(),date.getHours(), date.getMinutes(), date.getSeconds()));
+        p.setUpdateDate(null);
         p.setGroupId(String.valueOf(post.getOwnerId()));
         p.setLikesCount(post.getLikes().getCount());
         p.setRepostsCount(post.getReposts().getCount());
