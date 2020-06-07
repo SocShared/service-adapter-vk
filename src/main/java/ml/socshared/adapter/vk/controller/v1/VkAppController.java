@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VkAdapterAppApi;
 import ml.socshared.adapter.vk.domain.db.SystemUser;
 import ml.socshared.adapter.vk.domain.response.SocUserInfoResponse;
-import ml.socshared.adapter.vk.exception.impl.HttpInternalServerErrorException;
+import ml.socshared.adapter.vk.exception.impl.HttpBadRequestException;
 import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.service.ApplicationService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
@@ -44,9 +44,9 @@ public class VkAppController  implements VkAdapterAppApi {
         try{
             return appService.getUserSocialInformation(uuid);
         }catch (VKClientException e) {
-            String msg = "VkClien Error: " + e.getMessage() + "(Code: " + e.getErrorType() + ")";
-            log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            String msg = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(msg);
+            throw new HttpBadRequestException(msg);
         } catch (HttpNotFoundException exp) {
             log.trace("user with id not found", exp);
             return null;
@@ -68,7 +68,7 @@ public class VkAppController  implements VkAdapterAppApi {
         } catch (VKClientException e) {
             String msg = "VkClien Error: " + e.getMessage() + "(Code: " + e.getErrorType() + ")";
             log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            throw new HttpBadRequestException(msg);
         }
 
     }

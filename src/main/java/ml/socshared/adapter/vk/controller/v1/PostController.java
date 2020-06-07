@@ -5,7 +5,7 @@ import ml.socshared.adapter.vk.api.v1.rest.VKAdapterPostAPI;
 import ml.socshared.adapter.vk.domain.request.PostRequest;
 import ml.socshared.adapter.vk.domain.response.Page;
 import ml.socshared.adapter.vk.domain.response.PostResponse;
-import ml.socshared.adapter.vk.exception.impl.HttpInternalServerErrorException;
+import ml.socshared.adapter.vk.exception.impl.HttpBadRequestException;
 import ml.socshared.adapter.vk.service.VkPostService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +42,9 @@ public class PostController implements VKAdapterPostAPI {
         try {
             return postService.getPostById(userId, groupId, postId);
         } catch (VKClientException e) {
-            String msg = "VkClient error: " + e.getMessage();
-            log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            String message = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(message);
+            throw new HttpBadRequestException(message);
         }
     }
 
@@ -59,9 +59,9 @@ public class PostController implements VKAdapterPostAPI {
         try {
             return postService.getPostsOfGroup(userId, groupId, page, size);
         } catch (VKClientException e) {
-            String msg = "VkClient Error: " + e.getMessage();
-            log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            String message = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(message);
+            throw new HttpBadRequestException(message);
         }
     }
 
@@ -76,9 +76,9 @@ public class PostController implements VKAdapterPostAPI {
         try {
             return postService.addPostToGroup(systemUserId, groupId, message.getMessage());
         } catch (VKClientException e) {
-            String msg = "VkClient Error: " + e.getMessage();
-            log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            String msg = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(msg);
+            throw new HttpBadRequestException(msg);
         }
     }
 
@@ -96,9 +96,9 @@ public class PostController implements VKAdapterPostAPI {
             postService.updatePostOfGroup(userId, groupId, postId, message.getMessage());
             return postService.getPostById(userId, groupId, postId);
         } catch (VKClientException e) {
-           String msg = "VkClient Error: " + e.getMessage() + "(Code: " + e.getErrorType() + ")";
-           log.warn(msg);
-           throw new HttpInternalServerErrorException(msg);
+            String msg = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(msg);
+            throw new HttpBadRequestException(msg);
         }
     }
 
@@ -114,9 +114,9 @@ public class PostController implements VKAdapterPostAPI {
         try {
             postService.updatePostOfGroup(userId, groupId, postId, message.getMessage());
         } catch (VKClientException e) {
-            String msg = "VkClient Error: " + e.getMessage() + "(Code: " + e.getErrorType() + ")";
-            log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            String msg = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(msg);
+            throw new HttpBadRequestException(msg);
         }
     }
 
@@ -136,9 +136,9 @@ public class PostController implements VKAdapterPostAPI {
          return response;
          
         } catch (VKClientException e) {
-            String msg = "VkClien Error: " + e.getMessage() + "(Code: " + e.getErrorType() + ")";
-            log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            String msg = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(msg);
+            throw new HttpBadRequestException(msg);
         }
     }
 }

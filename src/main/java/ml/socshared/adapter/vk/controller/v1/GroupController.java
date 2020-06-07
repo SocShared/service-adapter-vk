@@ -5,7 +5,6 @@ import ml.socshared.adapter.vk.api.v1.rest.VkAdapterGroupApi;
 import ml.socshared.adapter.vk.domain.response.GroupResponse;
 import ml.socshared.adapter.vk.domain.response.Page;
 import ml.socshared.adapter.vk.exception.impl.HttpBadRequestException;
-import ml.socshared.adapter.vk.exception.impl.HttpInternalServerErrorException;
 import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.service.VkGroupService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
@@ -49,9 +48,9 @@ public class GroupController implements VkAdapterGroupApi {
             throw exp;
         }
         catch(VKClientException exp) {
-            log.info("Vk returned error object with code: " + exp.getErrorType().getErrorCode() +
-                    "(" + exp.getErrorType().getErrorMsg() + ")" );
-            throw new HttpInternalServerErrorException("Vk returned error: " + exp.getErrorType().getErrorMsg() + "(" + exp.getErrorType().getErrorCode() + ")");
+            String message = String.format("Vk returned error object: %s", exp.getErrorType());
+            log.info(message);
+            throw new HttpBadRequestException(message);
         }
 
     }
@@ -66,7 +65,7 @@ public class GroupController implements VkAdapterGroupApi {
             return groupService.getUserGroupbyId(systemUserId, groupId);
         } catch (VKClientException e) {
             log.warn("VkClient Error:" + e.getMessage());
-            throw new HttpInternalServerErrorException(e.getMessage());
+            throw new HttpBadRequestException(e.getMessage());
         }
     }
 }

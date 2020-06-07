@@ -5,7 +5,7 @@ import ml.socshared.adapter.vk.api.v1.rest.VkAdapterCommentApi;
 import ml.socshared.adapter.vk.domain.response.CommentResponse;
 import ml.socshared.adapter.vk.domain.response.Page;
 import ml.socshared.adapter.vk.domain.response.SubCommentResponse;
-import ml.socshared.adapter.vk.exception.impl.HttpInternalServerErrorException;
+import ml.socshared.adapter.vk.exception.impl.HttpBadRequestException;
 import ml.socshared.adapter.vk.service.VkCommentService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +38,9 @@ public class CommentController implements VkAdapterCommentApi {
         try{
             return service.getCommentsOfPost(systemUserId, vkGroupId, postId, page, count);
         } catch (VKClientException e) {
-            String msg = "VkClient Error: " + e.getErrorType().getErrorMsg() + " (Code: " + e.getErrorType().getErrorCode() + ")";
-            log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            String message = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(message);
+            throw new HttpBadRequestException(message);
         }
     }
 
@@ -56,9 +56,9 @@ public class CommentController implements VkAdapterCommentApi {
         try{
             return service.getCommentOfPost(systemUserId, vkGroupId, postId, commentId);
         } catch (VKClientException e) {
-            String msg = "VkClient Error: " + e.getMessage() + " (Code: " + e.getErrorType().getErrorCode() + ")";
-            log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            String message = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(message);
+            throw new HttpBadRequestException(message);
         }
     }
 
@@ -73,9 +73,9 @@ public class CommentController implements VkAdapterCommentApi {
         try{
             return service.getSubComments(systemUserId, vkGroupId, postId, commentId, page, size);
         } catch (VKClientException e) {
-            String msg = "VkClient Error: " + e.getMessage() + " (Code: " + e.getErrorType().getErrorCode() + ")";
-            log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            String message = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(message);
+            throw new HttpBadRequestException(message);
         }
     }
 
@@ -89,9 +89,9 @@ public class CommentController implements VkAdapterCommentApi {
         try{
             return service.getSubCommentById(systemUserId, vkGroupId, postId, commentId, subCommentId);
         } catch (VKClientException e) {
-            String msg = "VkClient Error: " + e.getMessage() + " (Code: " + e.getErrorType().getErrorCode() + ")";
-            log.warn(msg);
-            throw new HttpInternalServerErrorException(msg);
+            String message = String.format("Vk returned error object: %s", e.getErrorType());
+            log.info(message);
+            throw new HttpBadRequestException(message);
         }
     }
 }
