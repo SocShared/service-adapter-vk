@@ -1,4 +1,4 @@
-package ml.socshared.template.handler;
+package ml.socshared.adapter.vk.handler;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 
 @RestController
 public class ErrorControllerHandler implements ErrorController {

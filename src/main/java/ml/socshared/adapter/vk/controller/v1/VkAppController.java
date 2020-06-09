@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VkAdapterAppApi;
 import ml.socshared.adapter.vk.domain.db.SystemUser;
 import ml.socshared.adapter.vk.domain.response.SocUserInfoResponse;
-import ml.socshared.adapter.vk.exception.impl.HttpBadRequestException;
 import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.service.ApplicationService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
@@ -43,11 +42,7 @@ public class VkAppController  implements VkAdapterAppApi {
         log.info("Request get social user info");
         try{
             return appService.getUserSocialInformation(uuid);
-        }catch (VKClientException e) {
-            String msg = String.format("Vk returned error object: %s", e.getErrorType());
-            log.info(msg);
-            throw new HttpBadRequestException(msg);
-        } catch (HttpNotFoundException exp) {
+        } catch (HttpNotFoundException | VKClientException exp) {
             log.trace("user with id not found", exp);
             return null;
         }
@@ -60,16 +55,10 @@ public class VkAppController  implements VkAdapterAppApi {
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void appRegister(@PathVariable(name = "user") UUID systemUserID,
                          //   @PathVariable(name = "vk_app_id") String vkAppID,
-                            @RequestBody String accessToken) throws HttpNotFoundException {
-        try {
+                            @RequestBody String accessToken) throws HttpNotFoundException, VKClientException {
             String vkAppID = "NotRequired";//TODO нужен ли идентификатор приложения вк?
             log.info("Request of register vk application");
             appService.setApp(systemUserID, vkAppID, accessToken);
-        } catch (VKClientException e) {
-            String msg = "VkClien Error: " + e.getMessage() + "(Code: " + e.getErrorType() + ")";
-            log.warn(msg);
-            throw new HttpBadRequestException(msg);
-        }
 
     }
 

@@ -74,4 +74,8 @@ public interface VKFeignClient {
                                                        @Param("token") String token);
     //comment_id
 
+    @RequestLine("GET /users.search?access_token={token}&v=103.5&group_id={vkGroupId}&online=1&count=0")
+    VKResponse<VkOnline> getGroupOnline(@Param("vkGroupId") String vkGroupId,
+                                        @Param("token") String token);
+
  }

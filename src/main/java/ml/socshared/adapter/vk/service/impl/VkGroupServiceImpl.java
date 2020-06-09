@@ -5,7 +5,6 @@ import ml.socshared.adapter.vk.domain.db.SystemUser;
 import ml.socshared.adapter.vk.domain.response.GroupResponse;
 import ml.socshared.adapter.vk.domain.response.Page;
 import ml.socshared.adapter.vk.exception.impl.HttpBadRequestException;
-import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.service.ApplicationService;
 import ml.socshared.adapter.vk.service.BaseFunctions;
 import ml.socshared.adapter.vk.service.VkAuthorizationService;
@@ -13,7 +12,6 @@ import ml.socshared.adapter.vk.service.VkGroupService;
 import ml.socshared.adapter.vk.service.sentry.SentrySender;
 import ml.socshared.adapter.vk.service.sentry.SentryTag;
 import ml.socshared.adapter.vk.vkclient.VKClient;
-import ml.socshared.adapter.vk.vkclient.domain.ErrorType;
 import ml.socshared.adapter.vk.vkclient.domain.Paginator;
 import ml.socshared.adapter.vk.vkclient.domain.VkGroup;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
@@ -97,6 +95,12 @@ public class VkGroupServiceImpl implements VkGroupService {
         return response;
     }
 
+    @Override
+    public Integer getMembersOnlineOfGroup(UUID systemUserId, String vkGroupId) throws VKClientException {
+        SystemUser sUser = vkAuth.getUser(systemUserId);
+        client.setToken(sUser.getAccessToken());
+        return client.getGroupOnline(vkGroupId);
+    }
 
 
     static public GroupResponse convertVkGroupToGroupResponseDefault(VkGroup vkGroup) {

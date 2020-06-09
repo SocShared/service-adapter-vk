@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javassist.NotFoundException;
 import ml.socshared.adapter.vk.domain.db.SystemUser;
+import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 
 import java.util.UUID;
 
@@ -24,5 +25,5 @@ public interface VkAdapterAppApi {
             @ApiResponse(code=200, message = "Successful!"),
             @ApiResponse(code=404, message = "When user with uuid not found")
             })
-    void appRegister(UUID systemUserId, String accessToken);
+    void appRegister(UUID systemUserId, String accessToken) throws VKClientException;
 }

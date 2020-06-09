@@ -1,4 +1,4 @@
-package ml.socshared.template.handler;
+package ml.socshared.adapter.vk.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
@@ -8,11 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.ServletWebRequest;
-import ml.socshared.template.exception.SocsharedErrors;
 
 import java.time.LocalDateTime;
-
-;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,15 +26,21 @@ public class RestApiError {
     private String path;
     private String message;
     private LocalDateTime timestamp;
-    private SocsharedErrors errorCode;
 
-    public RestApiError(Throwable exc, HttpStatus status, ServletWebRequest webRequest, SocsharedErrors errorCode) {
+    public RestApiError(Throwable exc, HttpStatus status, ServletWebRequest webRequest) {
         this.status = status.value();
         this.error = status;
         this.message = exc.getMessage();
         this.timestamp = LocalDateTime.now();
         this.path = webRequest.getRequest().getRequestURI();
-        this.errorCode = errorCode;
+    }
+
+    public RestApiError(String message, HttpStatus status, ServletWebRequest webRequest) {
+        this.status = status.value();
+        this.error = status;
+        this.message = message;
+        this.timestamp = LocalDateTime.now();
+        this.path = webRequest.getRequest().getRequestURI();
     }
 }
 

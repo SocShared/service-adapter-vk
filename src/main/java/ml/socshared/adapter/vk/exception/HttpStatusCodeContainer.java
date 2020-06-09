@@ -1,4 +1,4 @@
-package ml.socshared.template.exception;
+package ml.socshared.adapter.vk.exception;
 
 import org.springframework.http.HttpStatus;
 

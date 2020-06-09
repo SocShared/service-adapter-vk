@@ -172,6 +172,15 @@ public class VKClient {
         return response.getResponse();
 
     }
+
+    public Integer getGroupOnline(String vkGroupId) throws VKClientException {
+        VKResponse<VkOnline> response = client.getGroupOnline(vkGroupId, token);
+        if(response.isError()) {
+            throw new VKClientException(response.getError());
+        }
+        return response.getResponse().getOnline();
+    }
+
     private static StringBuilder convertListStringToString(List<String> list) {
        StringBuilder str = new StringBuilder();
        for(int i = 0; i < list.size()-1; i++) {

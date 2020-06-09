@@ -84,6 +84,11 @@ public class ClientConfiguration {
                         new VKJsonResponseConverter<List<User>>(new TypeToken<>(){}))
                 .registerTypeAdapter(new TypeToken<List<User>>(){}.getType(),
                         new VKJsonList<User>(new TypeToken<>(){}))
+
+                .registerTypeAdapter(new TypeToken<VKResponse<VkOnline>>(){}.getType(),
+                        new VKJsonResponseConverter<VkOnline>(new TypeToken<>(){}))
+                .registerTypeAdapter(VkOnline.class,
+                        new VKJsonOnlineConverter())
                 .create();
         return new GsonDecoder(gson);
     }

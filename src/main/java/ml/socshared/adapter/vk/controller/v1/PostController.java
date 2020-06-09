@@ -5,7 +5,6 @@ import ml.socshared.adapter.vk.api.v1.rest.VKAdapterPostAPI;
 import ml.socshared.adapter.vk.domain.request.PostRequest;
 import ml.socshared.adapter.vk.domain.response.Page;
 import ml.socshared.adapter.vk.domain.response.PostResponse;
-import ml.socshared.adapter.vk.exception.impl.HttpBadRequestException;
 import ml.socshared.adapter.vk.service.VkPostService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +36,9 @@ public class PostController implements VKAdapterPostAPI {
     @GetMapping("/private/users/{systemUserId}/groups/{groupId}/posts/{postId}")
     public PostResponse getPostOfGroupById(@PathVariable("systemUserId") UUID userId,
                                            @PathVariable("groupId") String groupId,
-                                           @PathVariable("postId") String postId) {
+                                           @PathVariable("postId") String postId) throws VKClientException {
         log.info("Request of get post of group by id");
-        try {
-            return postService.getPostById(userId, groupId, postId);
-        } catch (VKClientException e) {
-            String message = String.format("Vk returned error object: %s", e.getErrorType());
-            log.info(message);
-            throw new HttpBadRequestException(message);
-        }
+        return postService.getPostById(userId, groupId, postId);
     }
 
     @Override
@@ -54,15 +47,9 @@ public class PostController implements VKAdapterPostAPI {
     public Page<PostResponse> getPostsOfGroup(@PathVariable("systemUserId") UUID userId,
                                               @PathVariable("groupId") String groupId,
                                               @RequestParam(value = "page", required = false, defaultValue ="0") int page,
-                                              @RequestParam(value = "size", required = false, defaultValue ="10")int size) {
+                                              @RequestParam(value = "size", required = false, defaultValue ="10")int size) throws VKClientException {
         log.info("Request of get posts page");
-        try {
-            return postService.getPostsOfGroup(userId, groupId, page, size);
-        } catch (VKClientException e) {
-            String message = String.format("Vk returned error object: %s", e.getErrorType());
-            log.info(message);
-            throw new HttpBadRequestException(message);
-        }
+        return postService.getPostsOfGroup(userId, groupId, page, size);
     }
 
     @Override
@@ -71,15 +58,9 @@ public class PostController implements VKAdapterPostAPI {
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public PostResponse addPostInGroup(@PathVariable UUID systemUserId,
                                        @PathVariable String groupId,
-                                       @RequestBody PostRequest message) {
+                                       @RequestBody PostRequest message) throws VKClientException {
         log.info("Request of create post");
-        try {
-            return postService.addPostToGroup(systemUserId, groupId, message.getMessage());
-        } catch (VKClientException e) {
-            String msg = String.format("Vk returned error object: %s", e.getErrorType());
-            log.info(msg);
-            throw new HttpBadRequestException(msg);
-        }
+        return postService.addPostToGroup(systemUserId, groupId, message.getMessage());
     }
 
 
@@ -90,16 +71,10 @@ public class PostController implements VKAdapterPostAPI {
     public PostResponse updateAndGetPostInGroupById(@PathVariable UUID userId,
                                                     @PathVariable String groupId,
                                                     @PathVariable String postId,
-                                                    @RequestBody PostRequest message) {
+                                                    @RequestBody PostRequest message) throws VKClientException {
         log.info("Patch request: Update post in group");
-        try {
-            postService.updatePostOfGroup(userId, groupId, postId, message.getMessage());
-            return postService.getPostById(userId, groupId, postId);
-        } catch (VKClientException e) {
-            String msg = String.format("Vk returned error object: %s", e.getErrorType());
-            log.info(msg);
-            throw new HttpBadRequestException(msg);
-        }
+        postService.updatePostOfGroup(userId, groupId, postId, message.getMessage());
+        return postService.getPostById(userId, groupId, postId);
     }
 
     @Override
@@ -109,15 +84,9 @@ public class PostController implements VKAdapterPostAPI {
     public void updatePostInGroupById(@PathVariable UUID userId,
                                       @PathVariable String groupId,
                                       @PathVariable String postId,
-                                      @RequestBody PostRequest message) {
+                                      @RequestBody PostRequest message) throws VKClientException {
         log.info("Put request: Update post in group");
-        try {
-            postService.updatePostOfGroup(userId, groupId, postId, message.getMessage());
-        } catch (VKClientException e) {
-            String msg = String.format("Vk returned error object: %s", e.getErrorType());
-            log.info(msg);
-            throw new HttpBadRequestException(msg);
-        }
+        postService.updatePostOfGroup(userId, groupId, postId, message.getMessage());
     }
 
     @Override
@@ -125,20 +94,13 @@ public class PostController implements VKAdapterPostAPI {
     @DeleteMapping(value = "/private/users/{userId}/groups/{groupId}/posts/{postId}")
     public Map<String, String> removePostInGroupById(@PathVariable UUID userId,
                                                      @PathVariable String groupId,
-                                                     @PathVariable String postId) {
+                                                     @PathVariable String postId) throws VKClientException {
         log.info("Request delete of group post");
-        try {
-         postService.deletePostOfGroup(userId, groupId, postId);
-         Map<String, String> response = new HashMap<>();
-         response.put("systemUserId", String.valueOf(userId));
-         response.put("groupId", groupId);
-         response.put("postId", postId);
-         return response;
-         
-        } catch (VKClientException e) {
-            String msg = String.format("Vk returned error object: %s", e.getErrorType());
-            log.info(msg);
-            throw new HttpBadRequestException(msg);
-        }
+        postService.deletePostOfGroup(userId, groupId, postId);
+        Map<String, String> response = new HashMap<>();
+        response.put("systemUserId", String.valueOf(userId));
+        response.put("groupId", groupId);
+        response.put("postId", postId);
+        return response;
     }
 }
