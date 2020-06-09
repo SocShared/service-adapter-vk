@@ -42,7 +42,7 @@ public class VkAuthorizationServiceImpl implements VkAuthorizationService {
 
             Map<String, Object> additional = new HashMap<>();
             sentrySender.sentryMessage("get user info", additional,
-                    Collections.singletonList(SentryTag.GetUserInfo));
+                    Collections.singletonList(SentryTag.GET_USER_INFO));
 
             return sUser;
         } catch(HttpNotFoundException exp) {

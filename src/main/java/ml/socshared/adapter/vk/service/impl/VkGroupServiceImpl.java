@@ -71,7 +71,7 @@ public class VkGroupServiceImpl implements VkGroupService {
         Map<String, Object> additional = new HashMap<>();
         additional.put("system_user_id", systemUserId);
         sentrySender.sentryMessage("get user vk groups", additional,
-                Collections.singletonList(SentryTag.GetUserGroups));
+                Collections.singletonList(SentryTag.GET_USER_GROUPS));
 
 
         return responsePage;
@@ -89,7 +89,7 @@ public class VkGroupServiceImpl implements VkGroupService {
         additional.put("system_user_id", systemUserId);
         additional.put("group_id", systemUserId);
         sentrySender.sentryMessage("get user's group info by id", additional,
-                Collections.singletonList(SentryTag.GetUserGroup));
+                Collections.singletonList(SentryTag.GET_USER_GROUP));
 
 
         return response;

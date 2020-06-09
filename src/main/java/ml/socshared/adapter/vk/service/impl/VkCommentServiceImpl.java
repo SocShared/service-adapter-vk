@@ -63,7 +63,7 @@ public class VkCommentServiceImpl implements VkCommentService {
         additional.put("page", page);
         additional.put("size", size);
         sentrySender.sentryMessage("get comments of vk post",
-                additional, Collections.singletonList(SentryTag.CommentsOfPost));
+                additional, Collections.singletonList(SentryTag.COMMENTS_OF_POST));
 
 
         return response;
@@ -86,7 +86,7 @@ public class VkCommentServiceImpl implements VkCommentService {
         additional.put("group_id", vkGroupId);
         additional.put("post_id", vkPostId);
         sentrySender.sentryMessage("get one comment of vk post",
-                additional, Collections.singletonList(SentryTag.CommentOfPost));
+                additional, Collections.singletonList(SentryTag.COMMENT_OF_POST));
 
 
         return response;
@@ -119,7 +119,7 @@ public class VkCommentServiceImpl implements VkCommentService {
         additional.put("post_id", vkPostId);
         additional.put("comment_id", vkSuperCommentId);
         sentrySender.sentryMessage("get one comment of vk post",
-                additional, Collections.singletonList(SentryTag.GetSubComments));
+                additional, Collections.singletonList(SentryTag.GET_SUB_COMMENTS));
 
         return responsePage;
 
@@ -168,7 +168,7 @@ public class VkCommentServiceImpl implements VkCommentService {
             additional.put("comment_id", vkSuperCommentId);
             additional.put("sub_comment_id", vkSubCommentId);
             sentrySender.sentryMessage("get one comment of vk post",
-                    additional, Collections.singletonList(SentryTag.GetSubCommentById));
+                    additional, Collections.singletonList(SentryTag.GET_SUB_COMMENT_BY_ID));
 
             return response;
         }

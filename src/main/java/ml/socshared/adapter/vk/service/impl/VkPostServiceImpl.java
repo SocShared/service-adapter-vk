@@ -61,7 +61,7 @@ public class VkPostServiceImpl implements VkPostService {
         additional.put("page", page);
         additional.put("size", size);
         sentrySender.sentryMessage("get posts of vk group", additional,
-                Collections.singletonList(SentryTag.GetPosts));
+                Collections.singletonList(SentryTag.GET_POSTS));
 
         return result;
     }
@@ -77,7 +77,7 @@ public class VkPostServiceImpl implements VkPostService {
         additional.put("group_id", vkGroupId);
         additional.put("post_id", vkPostId);
         sentrySender.sentryMessage("get one post of vk group", additional,
-                Collections.singletonList(SentryTag.GetPost));
+                Collections.singletonList(SentryTag.GET_POST));
 
         return convertPostToPostResponseDefault(vkPost);
     }
@@ -100,7 +100,7 @@ public class VkPostServiceImpl implements VkPostService {
         additional.put("group_id", vkGroupId);
         additional.put("message", message);
         sentrySender.sentryMessage("add post to group", additional,
-                Collections.singletonList(SentryTag.AddPost));
+                Collections.singletonList(SentryTag.ADD_POST));
 
         return result;
     }
@@ -115,7 +115,7 @@ public class VkPostServiceImpl implements VkPostService {
         additional.put("group_id", vkGroupId);
         additional.put("message", message);
         sentrySender.sentryMessage("update vk post", additional,
-                Collections.singletonList(SentryTag.UpdatePost));
+                Collections.singletonList(SentryTag.UPDATE_POST));
 
        client.editPostToGroup(vkGroupId, vkPostId, message);
     }
@@ -131,7 +131,7 @@ public class VkPostServiceImpl implements VkPostService {
         additional.put("group_id", vkGroupId);
         additional.put("post_id", vkGroupId);
         sentrySender.sentryMessage("delete vk post", additional,
-                Collections.singletonList(SentryTag.DeletePost));
+                Collections.singletonList(SentryTag.DELETE_POST));
 
         client.deletePost(vkGroupId, vkPostId);
     }
