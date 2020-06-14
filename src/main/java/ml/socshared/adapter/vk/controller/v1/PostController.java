@@ -1,5 +1,6 @@
 package ml.socshared.adapter.vk.controller.v1;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VKAdapterPostAPI;
 import ml.socshared.adapter.vk.domain.request.PostRequest;
@@ -20,16 +21,12 @@ import java.util.UUID;
 //TODO везде добавить проверку на существование access_token так, как он может быть пуст
 @PreAuthorize("isAuthenticated()")
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Slf4j
+@RequiredArgsConstructor
 public class PostController implements VKAdapterPostAPI {
 
-    private VkPostService postService;
-
-    @Autowired
-    PostController(VkPostService ps) {
-        postService = ps;
-    }
+    private final VkPostService postService;
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
@@ -54,8 +51,7 @@ public class PostController implements VKAdapterPostAPI {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @PostMapping(value = "/private/users/{systemUserId}/groups/{groupId}/posts",
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/private/users/{systemUserId}/groups/{groupId}/posts")
     public PostResponse addPostInGroup(@PathVariable UUID systemUserId,
                                        @PathVariable String groupId,
                                        @RequestBody PostRequest message) throws VKClientException {
@@ -66,8 +62,7 @@ public class PostController implements VKAdapterPostAPI {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @PatchMapping(value = "/private/users/{userId}/groups/{groupId}/posts/{postId}",
-        consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PatchMapping(value = "/private/users/{userId}/groups/{groupId}/posts/{postId}")
     public PostResponse updateAndGetPostInGroupById(@PathVariable UUID userId,
                                                     @PathVariable String groupId,
                                                     @PathVariable String postId,
@@ -79,8 +74,7 @@ public class PostController implements VKAdapterPostAPI {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @PutMapping(value = "/private/users/{userId}/groups/{groupId}/posts/{postId}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/private/users/{userId}/groups/{groupId}/posts/{postId}")
     public void updatePostInGroupById(@PathVariable UUID userId,
                                       @PathVariable String groupId,
                                       @PathVariable String postId,

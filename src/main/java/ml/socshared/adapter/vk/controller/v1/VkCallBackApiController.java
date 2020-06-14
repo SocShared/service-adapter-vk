@@ -2,6 +2,7 @@ package ml.socshared.adapter.vk.controller.v1;
 
 import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VkCallBackApi;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @PreAuthorize("isAuthenticated()")
 public class VkCallBackApiController implements VkCallBackApi {
 

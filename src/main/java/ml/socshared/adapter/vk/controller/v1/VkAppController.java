@@ -1,5 +1,6 @@
 package ml.socshared.adapter.vk.controller.v1;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VkAdapterAppApi;
 import ml.socshared.adapter.vk.domain.db.SystemUser;
@@ -17,16 +18,11 @@ import java.util.UUID;
 @RestController
 @Slf4j
 @PreAuthorize("isAuthenticated()")
-@RequestMapping("api/v1")
+@RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequiredArgsConstructor
 public class VkAppController  implements VkAdapterAppApi {
 
-    private ApplicationService appService;
-
-    @Autowired
-    VkAppController(ApplicationService app) {
-        appService = app;
-    }
-
+    private final ApplicationService appService;
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
@@ -51,8 +47,7 @@ public class VkAppController  implements VkAdapterAppApi {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @PostMapping(value = "/private/users/{user}/app/",
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/private/users/{user}/app/")
     public void appRegister(@PathVariable(name = "user") UUID systemUserID,
                          //   @PathVariable(name = "vk_app_id") String vkAppID,
                             @RequestBody String accessToken) throws HttpNotFoundException, VKClientException {

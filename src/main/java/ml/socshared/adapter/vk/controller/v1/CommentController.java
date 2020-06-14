@@ -1,5 +1,6 @@
 package ml.socshared.adapter.vk.controller.v1;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VkAdapterCommentApi;
 import ml.socshared.adapter.vk.domain.response.CommentResponse;
@@ -8,6 +9,7 @@ import ml.socshared.adapter.vk.domain.response.SubCommentResponse;
 import ml.socshared.adapter.vk.service.VkCommentService;
 import ml.socshared.adapter.vk.vkclient.exception.VKClientException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,15 +17,12 @@ import java.util.UUID;
 
 @PreAuthorize("isAuthenticated()")
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Slf4j
+@RequiredArgsConstructor
 public class CommentController implements VkAdapterCommentApi {
-    private VkCommentService service;
 
-    @Autowired
-    public CommentController(VkCommentService service) {
-        this.service = service;
-    }
+    private final VkCommentService service;
 
 
     @PreAuthorize("hasRole('SERVICE')")
