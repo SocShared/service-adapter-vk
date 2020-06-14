@@ -51,7 +51,12 @@ public class JwtTokenProvider {
             CheckTokenRequest request = new CheckTokenRequest();
             request.setToken(token);
 
-            return serviceId.equals(toServiceId) && authClient.send(request).getSuccess();
+            log.info("token id: " + toServiceId);
+            log.info("service id: " + serviceId);
+            boolean validate = serviceId.equals(toServiceId) && authClient.send(request).getSuccess();
+            log.info("validate: " + validate);
+
+            return validate;
         } catch (JwtException | IllegalArgumentException exc) {
             if (exc instanceof ExpiredJwtException) {
                 log.warn("JWT Token is expired.");
