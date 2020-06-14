@@ -18,4 +18,4 @@ management:
 
 feign:
   url:
-    auth: ${AUTH_SERVICE:https://auth.socshared.ml}
+    auth: ${AUTH_SERVICE:localhost:19999}
