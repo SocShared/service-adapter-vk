@@ -17,7 +17,8 @@ import java.util.UUID;
 @RestController
 @Slf4j
 @PreAuthorize("isAuthenticated()")
-@RequestMapping("api/v1")
+@RequestMapping(value = "api/v1", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+        produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class VkAppController  implements VkAdapterAppApi {
 
     private ApplicationService appService;
@@ -51,8 +52,7 @@ public class VkAppController  implements VkAdapterAppApi {
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
-    @PostMapping(value = "/private/users/{user}/app/",
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/private/users/{user}/app/")
     public void appRegister(@PathVariable(name = "user") UUID systemUserID,
                          //   @PathVariable(name = "vk_app_id") String vkAppID,
                             @RequestBody String accessToken) throws HttpNotFoundException, VKClientException {
