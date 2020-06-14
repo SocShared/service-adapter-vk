@@ -1,5 +1,6 @@
 package ml.socshared.adapter.vk.controller.v1;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VkAdapterCommentApi;
 import ml.socshared.adapter.vk.domain.response.CommentResponse;
@@ -16,16 +17,12 @@ import java.util.UUID;
 
 @PreAuthorize("isAuthenticated()")
 @RestController
-@RequestMapping(value = "api/v1", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-        produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Slf4j
+@RequiredArgsConstructor
 public class CommentController implements VkAdapterCommentApi {
-    private VkCommentService service;
 
-    @Autowired
-    public CommentController(VkCommentService service) {
-        this.service = service;
-    }
+    private final VkCommentService service;
 
 
     @PreAuthorize("hasRole('SERVICE')")

@@ -13,8 +13,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "api/v1", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-        produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @PreAuthorize("isAuthenticated()")
 public class VkCallBackApiController implements VkCallBackApi {
 

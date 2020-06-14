@@ -1,5 +1,6 @@
 package ml.socshared.adapter.vk.controller.v1;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VKAdapterPostAPI;
 import ml.socshared.adapter.vk.domain.request.PostRequest;
@@ -20,17 +21,12 @@ import java.util.UUID;
 //TODO везде добавить проверку на существование access_token так, как он может быть пуст
 @PreAuthorize("isAuthenticated()")
 @RestController
-@RequestMapping(value = "api/v1", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-        produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Slf4j
+@RequiredArgsConstructor
 public class PostController implements VKAdapterPostAPI {
 
-    private VkPostService postService;
-
-    @Autowired
-    PostController(VkPostService ps) {
-        postService = ps;
-    }
+    private final VkPostService postService;
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")

@@ -1,5 +1,6 @@
 package ml.socshared.adapter.vk.controller.v1;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VkAdapterAppApi;
 import ml.socshared.adapter.vk.domain.db.SystemUser;
@@ -17,17 +18,11 @@ import java.util.UUID;
 @RestController
 @Slf4j
 @PreAuthorize("isAuthenticated()")
-@RequestMapping(value = "api/v1", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-        produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequiredArgsConstructor
 public class VkAppController  implements VkAdapterAppApi {
 
-    private ApplicationService appService;
-
-    @Autowired
-    VkAppController(ApplicationService app) {
-        appService = app;
-    }
-
+    private final ApplicationService appService;
 
     @Override
     @PreAuthorize("hasRole('SERVICE')")
