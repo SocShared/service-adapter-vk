@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: ${SPRING_PROFILE:local}
+  application:
+    name: vk-adapter
 
 service:
   id: cb43eee3-3468-4cc2-b6ed-63419e8726ce
