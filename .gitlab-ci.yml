@@ -1,17 +1,25 @@
 image: java:11
 
 stages:
-  - build-and-docker
+  - build
+  - docker-build
   - docker-push
   - docker-deploy-swarm
 
 before_script:
   - chmod +x gradlew
 
-build-and-docker:
-  stage: build-and-docker
+build:
+  stage: build
+  script: ./gradlew clean build
+  artifacts:
+    paths:
+      - build/libs/socshared-vk-adapter-1.0.0-SNAPSHOT.jar
+    expire_in: 1 hrs
+
+docker-build:
+  stage: docker-build
   script:
-    - ./gradlew clean build
     - docker 2>/dev/null 1>&2 rmi `docker images -aq` || true
     - docker build -t $CI_DOCKER_LOGIN/socshared-vk-adapter .
 
