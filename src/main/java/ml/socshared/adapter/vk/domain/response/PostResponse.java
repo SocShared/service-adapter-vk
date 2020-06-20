@@ -10,18 +10,19 @@ import java.util.UUID;
 
 @Data
 public class PostResponse {
-    UUID systemUserId;
-    String userId; //Id пользователя, который сделал пост
-    String groupId;
-    String postId;
-    String message;
-    String adapterId = "vk";
-    Integer commentsCount;
-    Integer likesCount = 0;
-    Integer repostsCount = 0;
-    Integer viewsCount = 0;
+   private UUID systemUserId;
+   private String userId; //Id пользователя, который сделал пост
+   private  String groupId;
+   private  String postId;
+   private  String message;
+   private  String adapterId = "vk";
+   private  Integer commentsCount;
+   private  Integer likesCount = 0;
+   private  Integer repostsCount = 0;
+   private  Integer viewsCount = 0;
+
+   @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
+   private LocalDateTime createdDate;
     @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
-    LocalDateTime createdDate;
-    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
-    LocalDateTime updateDate;
+    private LocalDateTime updateDate;
 }
