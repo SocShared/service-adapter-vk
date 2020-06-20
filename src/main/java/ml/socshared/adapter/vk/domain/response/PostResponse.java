@@ -1,7 +1,9 @@
 package ml.socshared.adapter.vk.domain.response;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
+import ml.socshared.adapter.vk.config.CustomLocalDateTimeSerializer;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,6 +20,8 @@ public class PostResponse {
     Integer likesCount = 0;
     Integer repostsCount = 0;
     Integer viewsCount = 0;
+    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     LocalDateTime createdDate;
+    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     LocalDateTime updateDate;
 }
