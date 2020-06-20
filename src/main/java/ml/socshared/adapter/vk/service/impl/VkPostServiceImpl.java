@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
@@ -95,6 +96,8 @@ public class VkPostServiceImpl implements VkPostService {
         result.setMessage(message);
         result.setGroupId(vkGroupId);
         result.setSystemUserId(systemUserId);
+        result.setCreatedDate(LocalDateTime.now());
+        result.setUpdateDate(LocalDateTime.now());
 
         Map<String, Object> additional = new HashMap<>();
         additional.put("system_user_id", systemUserId);
@@ -142,7 +145,7 @@ public class VkPostServiceImpl implements VkPostService {
         BaseFunctions.modifyOwnerId(post);
         PostResponse p = new PostResponse();
         p.setCreatedDate(Instant.ofEpochSecond(post.getDate()).atZone(ZoneOffset.UTC).toLocalDateTime());
-        p.setUpdateDate(null);
+        p.setUpdateDate(p.getCreatedDate());
         p.setGroupId(String.valueOf(post.getOwnerId()));
         p.setLikesCount(post.getLikes().getCount());
         p.setRepostsCount(post.getReposts().getCount());
