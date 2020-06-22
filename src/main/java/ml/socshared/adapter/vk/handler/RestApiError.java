@@ -27,6 +27,7 @@ public class RestApiError {
     private HttpStatus error;
     private String path;
     private String message;
+
     @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     private LocalDateTime timestamp;
 
