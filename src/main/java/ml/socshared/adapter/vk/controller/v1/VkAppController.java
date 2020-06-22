@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ml.socshared.adapter.vk.api.v1.rest.VkAdapterAppApi;
 import ml.socshared.adapter.vk.domain.db.SystemUser;
+import ml.socshared.adapter.vk.domain.response.ApplicationCountResponse;
 import ml.socshared.adapter.vk.domain.response.SocUserInfoResponse;
 import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.service.ApplicationService;
@@ -62,6 +63,12 @@ public class VkAppController  implements VkAdapterAppApi {
     public void appReset(@PathVariable UUID systemUserId) {
         log.info("Request of unregister vk application");
         appService.unsetApp(systemUserId);
+    }
+
+    @PreAuthorize("hasRole('SERVICE')")
+    @GetMapping("/private/app/count")
+    public ApplicationCountResponse appCount() {
+        return appService.count();
     }
 
 }

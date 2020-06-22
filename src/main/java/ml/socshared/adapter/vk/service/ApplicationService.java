@@ -2,6 +2,7 @@ package ml.socshared.adapter.vk.service;
 
 
 import ml.socshared.adapter.vk.domain.db.SystemUser;
+import ml.socshared.adapter.vk.domain.response.ApplicationCountResponse;
 import ml.socshared.adapter.vk.domain.response.SocUserInfoResponse;
 import ml.socshared.adapter.vk.exception.impl.HttpNotFoundException;
 import ml.socshared.adapter.vk.repository.SystemUserRepository;
@@ -88,7 +89,11 @@ public class ApplicationService {
         return response;
     }
 
-
+    public ApplicationCountResponse count() {
+        return ApplicationCountResponse.builder()
+                .count(usersRepository.count())
+                .build();
+    }
 
     private SystemUserRepository usersRepository;
     private VKClient client;
